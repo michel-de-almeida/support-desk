@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import { extractErrorMessage } from '../../helpers/utils'
 import { authService } from './authService'
-import { IUserDetail } from 'support-desk-shared'
-import { ILoginData, IRegData } from 'support-desk-shared'
+import { IUserDetail, ILoginData, IRegData } from 'support-desk-shared'
 import { LocalStorageKeys } from '../../static/enums'
 
 // Get user from localstorage
