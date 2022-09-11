@@ -1,40 +1,53 @@
 import expressAsyncHandler from 'express-async-handler'
-import { vaildateJWT } from '../helpers/helpers'
+import { vaildateJWT } from '../helpers/utils'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
-import { IUser } from 'support-desk-shared'
+import { ILoginData, IRegData, IUser } from 'support-desk-shared'
 
 // @desc    Register a new user
 // @route   /api/users
 // @access  Public
 const registerUser = expressAsyncHandler(async (req, res) => {
-    const user: IUser = req.body
+    const regData: IRegData = req.body
 
     // Find if user already exists
-    const userExists = await UserModel.findOne({ email: user.email })
+    const userExists = await UserModel.findOne({ email: regData.email })
 
     if (userExists) {
         res.status(StatusCodes.BAD_REQUEST)
         throw new Error('Account already exists')
     }
 
+    //verify passwords match
+    if (regData.password !== regData.repeatPassword) {
+        res.status(StatusCodes.BAD_REQUEST)
+        throw new Error('Passwords do not match')
+    }
+
     // Hash password
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(user.password, salt)
-    user.password = hashedPassword
+    const hashedPassword = await bcrypt.hash(regData.password, salt)
 
     // Create user
+    const user: IUser = {
+        id: '',
+        username: regData.username,
+        password: hashedPassword,
+        email: regData.email,
+        isAdmin: regData.isAdmin,
+    }
     const newUser = await UserModel.create(user)
 
-    if (user) {
+    if (regData) {
         const token = await updateToken(newUser.id)
         res.status(StatusCodes.CREATED).json({
-            _id: newUser.id,
-            name: user.username,
-            email: user.email,
+            id: newUser.id,
+            username: newUser.username,
+            email: newUser.email,
             token: token,
+            isAdmin: newUser.isAdmin,
         })
     } else {
         res.status(StatusCodes.BAD_REQUEST)
@@ -46,19 +59,20 @@ const registerUser = expressAsyncHandler(async (req, res) => {
 // @route   /api/users/login
 // @access  Public
 const loginUser = expressAsyncHandler(async (req, res) => {
-    const cred: IUser = req.body
+    const cred: ILoginData = req.body
 
     const user = await UserModel.findOne({ email: cred.email })
 
     // Check user and passwords match
     if (user && (await bcrypt.compare(cred.password, user.password))) {
-        const token = await updateToken(user.id)
+        user.token = await updateToken(user.id)
 
         res.status(StatusCodes.OK).json({
-            _id: user.id,
-            name: user.username,
+            id: user.id,
+            username: user.username,
             email: user.email,
-            token: token,
+            token: user.token,
+            isAdmin: user.isAdmin,
         })
     } else {
         res.status(StatusCodes.UNAUTHORIZED)

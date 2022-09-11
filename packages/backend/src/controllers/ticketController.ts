@@ -1,6 +1,6 @@
 import expressAsyncHandler from 'express-async-handler'
 import { StatusCodes } from 'http-status-codes'
-import { getResponseMessage } from '../helpers/helpers'
+import { getResponseMessage } from '../helpers/utils'
 import { TicketModel } from '../models/ticketModel'
 import { ITicket } from 'support-desk-shared'
 

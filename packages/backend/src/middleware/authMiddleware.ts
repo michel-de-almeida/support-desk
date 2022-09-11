@@ -1,4 +1,4 @@
-import { vaildateJWT } from '../helpers/helpers'
+import { vaildateJWT } from '../helpers/utils'
 import expressAsyncHandler from 'express-async-handler'
 import { UserModel } from '../models/userModel'
 import { StatusCodes } from 'http-status-codes'
