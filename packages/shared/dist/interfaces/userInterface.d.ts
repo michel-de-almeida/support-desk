@@ -6,21 +6,10 @@ export interface IUser {
     token?: string;
     isAdmin: boolean;
 }
-export interface IUserDetail {
-    id: string;
-    username: string;
-    email: string;
-    token?: string;
-    isAdmin: boolean;
+export interface IUserDetail extends Omit<IUser, 'password'> {
 }
-export interface IRegData {
-    username: string;
-    email: string;
-    password: string;
+export interface IRegData extends Omit<IUser, 'id' | 'token' | 'isAdmin'> {
     repeatPassword: string;
-    isAdmin: boolean;
 }
-export interface ILoginData {
-    email: string;
-    password: string;
+export interface ILoginData extends Pick<IUser, 'email' | 'password'> {
 }
