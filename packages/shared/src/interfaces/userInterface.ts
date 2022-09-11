@@ -9,7 +9,7 @@ export interface IUser {
 
 export interface IUserDetail extends Omit<IUser, 'password'> {}
 
-export interface IRegData extends Omit<IUser, 'id' | 'token' | 'isAdmin'> {
+export interface IRegData extends Omit<IUser, 'id' | 'token'> {
     repeatPassword: string
 }
 

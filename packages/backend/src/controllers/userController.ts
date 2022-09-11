@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
-import { ILoginData, IRegData, IUser } from 'support-desk-shared'
+import { ILoginData, IRegData, IUser, IUserDetail } from 'support-desk-shared'
 
 // @desc    Register a new user
 // @route   /api/users
@@ -40,15 +40,16 @@ const registerUser = expressAsyncHandler(async (req, res) => {
     }
     const newUser = await UserModel.create(user)
 
-    if (regData) {
+    if (newUser) {
         const token = await updateToken(newUser.id)
-        res.status(StatusCodes.CREATED).json({
+        const resjson: IUserDetail = {
             id: newUser.id,
             username: newUser.username,
             email: newUser.email,
             token: token,
             isAdmin: newUser.isAdmin,
-        })
+        }
+        res.status(StatusCodes.CREATED).json(resjson)
     } else {
         res.status(StatusCodes.BAD_REQUEST)
         throw new Error('Invalid user data')
@@ -65,15 +66,15 @@ const loginUser = expressAsyncHandler(async (req, res) => {
 
     // Check user and passwords match
     if (user && (await bcrypt.compare(cred.password, user.password))) {
-        user.token = await updateToken(user.id)
-
-        res.status(StatusCodes.OK).json({
+        const token = await updateToken(user.id)
+        const resjson: IUserDetail = {
             id: user.id,
             username: user.username,
             email: user.email,
-            token: user.token,
+            token: token,
             isAdmin: user.isAdmin,
-        })
+        }
+        res.status(StatusCodes.OK).json(resjson)
     } else {
         res.status(StatusCodes.UNAUTHORIZED)
         throw new Error('Invalid credentials')
