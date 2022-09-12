@@ -1,7 +1,8 @@
 import { Switch } from '@mui/material'
 import { styled } from '@mui/material/styles'
+import { useState } from 'react'
 
-const customSwitch = styled(Switch)(({ theme }) => ({
+const CustomSwitch = styled(Switch)(({ theme }) => ({
     width: 62,
     height: 34,
     padding: 7,
@@ -49,8 +50,28 @@ const customSwitch = styled(Switch)(({ theme }) => ({
     },
 }))
 
-interface Props {}
+interface Props {
+    useDark: boolean
+    themeChanger: (useDark?: boolean) => void
+}
+
 const ThemeSwitch = (props: Props) => {
-    return <div>ThemeSwitch</div>
+    const expandedProps = {
+        ...props,
+        useDark: props.useDark || false,
+    }
+
+    const [state, setState] = useState(expandedProps)
+
+    const handleSwitch = (_e: any, checked: boolean) => {
+        setState({ ...state, useDark: checked })
+        state.themeChanger(checked)
+    }
+    return (
+        <CustomSwitch
+            checked={state.useDark}
+            onChange={handleSwitch}
+        />
+    )
 }
 export default ThemeSwitch
