@@ -6,14 +6,15 @@ import { LocalStorageKeys } from '../../static/enums'
 
 // Get user from localstorage
 const localStorageUser = localStorage.getItem(LocalStorageKeys.user)
+const emptyUser: IUserDetail = {
+    id: '',
+    username: '',
+    email: '',
+    isAdmin: false,
+}
 const user: IUserDetail = localStorageUser
     ? JSON.parse(localStorageUser)
-    : {
-          id: '',
-          username: '',
-          email: '',
-          isAdmin: false,
-      }
+    : emptyUser
 const initialState = {
     user: user,
     isLoading: false,
@@ -43,20 +44,15 @@ export const login = createAsyncThunk(
     }
 )
 
-// Logout user
-// NOTE: here we don't need a thunk as we are not doing anything async so we can
-// use a createAction instead
-export const logout = createAction('auth/logout', () => {
-    authService.logout()
-    // return an empty object as our payload as we don't need a payload but the
-    // prepare function requires a payload return
-    return { payload: {} }
-})
-
 const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        logout: (state) => {
+            authService.logout()
+            state.user = emptyUser
+        },
+    },
     extraReducers(builder) {
         builder
             .addCase(register.pending, (state) => {
@@ -82,6 +78,6 @@ const authSlice = createSlice({
     },
 })
 
-export const {} = authSlice.actions
+export const { logout } = authSlice.actions
 
 export default authSlice.reducer

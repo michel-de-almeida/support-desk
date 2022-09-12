@@ -2,7 +2,7 @@ import axios from 'axios'
 import { ILoginData, IRegData, IUserDetail } from 'support-desk-shared'
 import { LocalStorageKeys } from '../../static/enums'
 
-const API_URL = '/api/users/'
+const API_URL = '/api/users'
 
 // Register user
 const register = async (regData: IRegData) => {
@@ -19,7 +19,7 @@ const register = async (regData: IRegData) => {
 
 // Login user
 const login = async (loginData: ILoginData) => {
-    const response = await axios.post(API_URL + 'login', loginData)
+    const response = await axios.post(`${API_URL}/login`, loginData)
 
     if (response.data) {
         localStorage.setItem(
