@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { extractErrorMessage } from '../../helpers/utils'
 import { authService } from './authService'
 import { IUserDetail, ILoginData, IRegData } from 'support-desk-shared'

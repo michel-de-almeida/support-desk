@@ -10,10 +10,13 @@ import {
     IconButton,
     Stack,
 } from '@mui/material'
-import { Menu as MenuIcon } from '@mui/icons-material'
+import { Menu as MenuIcon, MoreVert as MoreIcon } from '@mui/icons-material'
+import { useState } from 'react'
 
 interface Props {}
 const Header = (props: Props) => {
+    const [themeMode, setThemeMode] = useState(true)
+
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const authState = useAppSelector((state) => state.auth)
@@ -21,6 +24,10 @@ const Header = (props: Props) => {
     const handleLogout = () => {
         dispatch(logout())
         navigate('/login')
+    }
+
+    const handleThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setThemeMode(event.target.checked)
     }
 
     return (
@@ -42,29 +49,31 @@ const Header = (props: Props) => {
                     >
                         Support Desk
                     </Typography>
-                    {authState.user.id ? (
-                        <Button onClick={handleLogout}>Logout</Button>
-                    ) : (
-                        <Stack
-                            direction={'row'}
-                            spacing={2}
-                        >
-                            <Button
-                                onClick={() => {
-                                    navigate('/login')
-                                }}
-                            >
-                                Login
-                            </Button>
-                            <Button
-                                onClick={() => {
-                                    navigate('/register')
-                                }}
-                            >
-                                Register
-                            </Button>
-                        </Stack>
-                    )}
+                    <Stack
+                        direction={'row'}
+                        spacing={1.5}
+                    >
+                        {authState.user.id ? (
+                            <Button onClick={handleLogout}>Logout</Button>
+                        ) : (
+                            <>
+                                <Button
+                                    onClick={() => {
+                                        navigate('/login')
+                                    }}
+                                >
+                                    Login
+                                </Button>
+                                <Button
+                                    onClick={() => {
+                                        navigate('/register')
+                                    }}
+                                >
+                                    Register
+                                </Button>
+                            </>
+                        )}
+                    </Stack>
                 </Toolbar>
             </AppBar>
         </Box>

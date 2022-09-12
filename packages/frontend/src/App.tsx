@@ -6,6 +6,7 @@ import Header from './components/header'
 import Home from './pages/home'
 import Login from './pages/login'
 import Register from './pages/register'
+import theme from './theme'
 
 function App() {
     return (
@@ -34,7 +35,7 @@ function App() {
             </Router>
             <ToastContainer
                 position='top-center'
-                theme='dark'
+                theme={theme.palette.mode}
                 autoClose={2000}
             />
         </Container>
