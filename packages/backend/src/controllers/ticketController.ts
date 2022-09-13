@@ -109,7 +109,7 @@ const updateTicket = expressAsyncHandler(async (req, res) => {
 
     if (ticket) {
         try {
-            await TicketModel.findByIdAndUpdate(ticket.id, ticket, {
+            await TicketModel.findByIdAndUpdate(ticket._id, ticket, {
                 new: true,
                 runValidators: true,
             })

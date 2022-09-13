@@ -6,6 +6,7 @@ import Header from './components/header'
 import Home from './pages/home'
 import Login from './pages/login'
 import Register from './pages/register'
+import Tickets from './pages/tickets'
 import theme from './theme'
 
 function App() {
@@ -30,6 +31,10 @@ function App() {
                     <Route
                         path='/register'
                         element={<Register />}
+                    />
+                    <Route
+                        path='/tickets'
+                        element={<Tickets />}
                     />
                 </Routes>
             </Router>

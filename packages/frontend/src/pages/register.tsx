@@ -1,13 +1,16 @@
 import {
+    Avatar,
     Box,
     Button,
     Container,
+    Grid,
+    Link,
     Stack,
     TextField,
     Typography,
 } from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import { Person as PersonIcon } from '@mui/icons-material'
-import LoadingBackdrop from '../components/loadingBackdrop'
 import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
@@ -50,88 +53,174 @@ const Register = (props: Props) => {
     }
 
     return (
-        <Container>
+        <Container
+            component='main'
+            maxWidth='xs'
+        >
             <Box
-                ml={'auto'}
-                mr={'auto'}
-                mt={2}
-                width={'60%'}
-                component='form'
-                onSubmit={handleSubmit}
+                sx={{
+                    marginTop: 8,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
             >
+                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                    <PersonIcon />
+                </Avatar>
                 <Typography
-                    variant={'h2'}
-                    fontWeight={700}
+                    component='h1'
+                    variant='h5'
                 >
-                    <Stack
-                        direction={'row'}
-                        alignContent='center'
-                        justifyContent='center'
-                        mb={2}
-                    >
-                        <PersonIcon fontSize='inherit' />
-                        Register
-                    </Stack>
+                    Sign up
                 </Typography>
-                <Typography
-                    variant={'h5'}
-                    fontWeight={700}
-                    color={'#828282'}
+                <Box
+                    component='form'
+                    noValidate
+                    onSubmit={handleSubmit}
+                    sx={{ mt: 3 }}
                 >
-                    <Stack
-                        direction={'row'}
-                        alignContent='center'
-                        justifyContent='center'
-                        mb={2}
-                    >
-                        Please register to get support
+                    <Stack spacing={2}>
+                        <TextField
+                            variant='outlined'
+                            type={'text'}
+                            label={'Full Name'}
+                            inputRef={username}
+                            required
+                            fullWidth
+                        />
+                        <TextField
+                            variant='outlined'
+                            type={'email'}
+                            label={'Email'}
+                            inputRef={email}
+                            required
+                            fullWidth
+                        />
+                        <TextField
+                            variant='outlined'
+                            type={'password'}
+                            label={'Password'}
+                            inputRef={password}
+                            required
+                            fullWidth
+                        />
+                        <TextField
+                            variant='outlined'
+                            type={'password'}
+                            label={'Confirm Password'}
+                            inputRef={repeatPassword}
+                            required
+                            fullWidth
+                        />
                     </Stack>
-                </Typography>
-                <Stack spacing={2}>
-                    <TextField
-                        variant='outlined'
-                        type={'text'}
-                        label={'Full Name'}
-                        inputRef={username}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        variant='outlined'
-                        type={'email'}
-                        label={'Email'}
-                        inputRef={email}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        variant='outlined'
-                        type={'password'}
-                        label={'Password'}
-                        inputRef={password}
-                        required
-                        fullWidth
-                    />
-                    <TextField
-                        variant='outlined'
-                        type={'password'}
-                        label={'Confirm Password'}
-                        inputRef={repeatPassword}
-                        required
-                        fullWidth
-                    />
-                    <Button
-                        fullWidth
+                    <LoadingButton
                         type='submit'
+                        fullWidth
                         variant='contained'
                         size='large'
+                        sx={{ mt: 3, mb: 2 }}
                     >
-                        Register
-                    </Button>
-                </Stack>
-                <LoadingBackdrop isOpen={authState.isLoading} />
+                        Sign Up
+                    </LoadingButton>
+                    <Grid
+                        container
+                        justifyContent='flex-end'
+                    >
+                        <Grid item>
+                            <Link
+                                href='#'
+                                variant='body2'
+                            >
+                                Already have an account? Sign in
+                            </Link>
+                        </Grid>
+                    </Grid>
+                </Box>
             </Box>
         </Container>
+        // <Container>
+        //     <Box
+        //         ml={'auto'}
+        //         mr={'auto'}
+        //         mt={2}
+        //         width={'60%'}
+        //         component='form'
+        //         onSubmit={handleSubmit}
+        //     >
+        //         <Typography
+        //             variant={'h2'}
+        //             fontWeight={700}
+        //         >
+        //             <Stack
+        //                 direction={'row'}
+        //                 alignContent='center'
+        //                 justifyContent='center'
+        //                 mb={2}
+        //             >
+        //                 <PersonIcon fontSize='inherit' />
+        //                 Register
+        //             </Stack>
+        //         </Typography>
+        //         <Typography
+        //             variant={'h5'}
+        //             fontWeight={700}
+        //             color={'#828282'}
+        //         >
+        //             <Stack
+        //                 direction={'row'}
+        //                 alignContent='center'
+        //                 justifyContent='center'
+        //                 mb={2}
+        //             >
+        //                 Please register to get support
+        //             </Stack>
+        //         </Typography>
+        //         <Stack spacing={2}>
+        //             <TextField
+        //                 variant='outlined'
+        //                 type={'text'}
+        //                 label={'Full Name'}
+        //                 inputRef={username}
+        //                 required
+        //                 fullWidth
+        //             />
+        //             <TextField
+        //                 variant='outlined'
+        //                 type={'email'}
+        //                 label={'Email'}
+        //                 inputRef={email}
+        //                 required
+        //                 fullWidth
+        //             />
+        //             <TextField
+        //                 variant='outlined'
+        //                 type={'password'}
+        //                 label={'Password'}
+        //                 inputRef={password}
+        //                 required
+        //                 fullWidth
+        //             />
+        //             <TextField
+        //                 variant='outlined'
+        //                 type={'password'}
+        //                 label={'Confirm Password'}
+        //                 inputRef={repeatPassword}
+        //                 required
+        //                 fullWidth
+        //             />
+        //             <Button
+        //                 fullWidth
+        //                 type='submit'
+        //                 variant='contained'
+        //                 size='large'
+        //             >
+        //                 Register
+        //             </Button>
+        //         </Stack>
+        //         <LoadingBackdrop isOpen={authState.isLoading} />
+        //     </Box>
+        // </Container>
     )
 }
 export default Register

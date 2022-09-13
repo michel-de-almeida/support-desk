@@ -1,8 +1,9 @@
+import { TicketStatus } from '../enums';
 export interface ITicket {
-    id: string;
+    _id: string;
     userId: string;
     product: string;
     description: string;
-    status?: string;
+    status?: TicketStatus;
+    createdAt: string;
 }
-export declare const initTicket: () => ITicket;
