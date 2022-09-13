@@ -9,14 +9,12 @@ import {
     Button,
     IconButton,
     Stack,
+    Link,
 } from '@mui/material'
-import { Menu as MenuIcon, MoreVert as MoreIcon } from '@mui/icons-material'
-import { useState } from 'react'
+import { Menu as MenuIcon } from '@mui/icons-material'
 
 interface Props {}
 const Header = (props: Props) => {
-    const [themeMode, setThemeMode] = useState(true)
-
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const authState = useAppSelector((state) => state.auth)
@@ -24,10 +22,6 @@ const Header = (props: Props) => {
     const handleLogout = () => {
         dispatch(logout())
         navigate('/login')
-    }
-
-    const handleThemeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setThemeMode(event.target.checked)
     }
 
     return (
@@ -47,7 +41,16 @@ const Header = (props: Props) => {
                         component='div'
                         sx={{ flexGrow: 1 }}
                     >
-                        Support Desk
+                        <Link
+                            href=''
+                            color='white'
+                            underline='hover'
+                            onClick={() => {
+                                navigate('/')
+                            }}
+                        >
+                            Support Desk
+                        </Link>
                     </Typography>
                     <Stack
                         direction={'row'}

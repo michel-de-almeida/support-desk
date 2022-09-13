@@ -32,12 +32,17 @@ export const register = createAsyncThunk(
     }
 )
 
+interface ILoginActionData {
+    user: ILoginData
+    isPersist: boolean
+}
+
 // Login user
 export const login = createAsyncThunk(
     'auth/login',
-    async (user: ILoginData, thunkAPI) => {
+    async (loginData: ILoginActionData, thunkAPI) => {
         try {
-            return await authService.login(user)
+            return await authService.login(loginData.user, loginData.isPersist)
         } catch (error) {
             return thunkAPI.rejectWithValue(extractErrorMessage(error))
         }

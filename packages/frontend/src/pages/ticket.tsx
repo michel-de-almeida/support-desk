@@ -1,10 +1,12 @@
-import { ITicket } from 'support-desk-shared'
+import { useNavigate, useParams } from 'react-router-dom'
 import CenterContainer from '../components/centerContainer'
+import { useAppDispatch } from '../app/hooks'
 
-interface Props {
-    ticket: ITicket
-}
-const Ticket = ({ ticket }: Props) => {
+interface Props {}
+const Ticket = (props: Props) => {
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const { ticketId } = useParams()
     return (
         <CenterContainer
             width='70%'

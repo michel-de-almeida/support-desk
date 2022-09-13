@@ -18,10 +18,10 @@ const register = async (regData: IRegData) => {
 }
 
 // Login user
-const login = async (loginData: ILoginData) => {
+const login = async (loginData: ILoginData, isPersist: boolean = false) => {
     const response = await axios.post(`${API_URL}/login`, loginData)
 
-    if (response.data) {
+    if (isPersist && response.data) {
         localStorage.setItem(
             LocalStorageKeys.user,
             JSON.stringify(response.data)

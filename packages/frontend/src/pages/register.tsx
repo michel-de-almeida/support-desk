@@ -1,19 +1,17 @@
 import {
     Avatar,
     Box,
-    Button,
     Container,
     Grid,
     Link,
-    Stack,
     TextField,
     Typography,
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { Person as PersonIcon } from '@mui/icons-material'
-import { useRef } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useAppDispatch } from '../app/hooks'
 import { register } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
 
@@ -24,11 +22,12 @@ const Register = (props: Props) => {
     const password = useRef<HTMLInputElement>(null)
     const repeatPassword = useRef<HTMLInputElement>(null)
 
+    const [isLoading, setisLoading] = useState(false)
+
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const authState = useAppSelector((state) => state.auth)
 
-    const handleSubmit = async (e: { preventDefault: () => void }) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         if (password.current?.value !== repeatPassword.current?.value) {
@@ -36,6 +35,7 @@ const Register = (props: Props) => {
             return
         }
 
+        setisLoading(true)
         const res = await dispatch(
             register({
                 email: email.current?.value!,
@@ -45,6 +45,7 @@ const Register = (props: Props) => {
                 isAdmin: false,
             })
         )
+        setisLoading(false)
 
         if (res.meta.requestStatus === 'fulfilled') {
             toast.success('Account created')
@@ -76,50 +77,53 @@ const Register = (props: Props) => {
                 </Typography>
                 <Box
                     component='form'
-                    noValidate
                     onSubmit={handleSubmit}
                     sx={{ mt: 3 }}
                 >
-                    <Stack spacing={2}>
-                        <TextField
-                            variant='outlined'
-                            type={'text'}
-                            label={'Full Name'}
-                            inputRef={username}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            variant='outlined'
-                            type={'email'}
-                            label={'Email'}
-                            inputRef={email}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            variant='outlined'
-                            type={'password'}
-                            label={'Password'}
-                            inputRef={password}
-                            required
-                            fullWidth
-                        />
-                        <TextField
-                            variant='outlined'
-                            type={'password'}
-                            label={'Confirm Password'}
-                            inputRef={repeatPassword}
-                            required
-                            fullWidth
-                        />
-                    </Stack>
+                    <TextField
+                        margin='normal'
+                        variant='outlined'
+                        type={'text'}
+                        label={'Full Name'}
+                        inputRef={username}
+                        required
+                        fullWidth
+                    />
+                    <TextField
+                        margin='normal'
+                        variant='outlined'
+                        type={'email'}
+                        label={'Email'}
+                        inputRef={email}
+                        required
+                        fullWidth
+                    />
+                    <TextField
+                        margin='normal'
+                        variant='outlined'
+                        type={'password'}
+                        label={'Password'}
+                        inputRef={password}
+                        required
+                        fullWidth
+                    />
+                    <TextField
+                        margin='normal'
+                        variant='outlined'
+                        type={'password'}
+                        label={'Confirm Password'}
+                        inputRef={repeatPassword}
+                        required
+                        fullWidth
+                    />
+
                     <LoadingButton
                         type='submit'
                         fullWidth
                         variant='contained'
                         size='large'
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 2, mb: 2 }}
+                        loading={isLoading}
                     >
                         Sign Up
                     </LoadingButton>
@@ -129,8 +133,11 @@ const Register = (props: Props) => {
                     >
                         <Grid item>
                             <Link
-                                href='#'
+                                href=''
                                 variant='body2'
+                                onClick={() => {
+                                    navigate('/login')
+                                }}
                             >
                                 Already have an account? Sign in
                             </Link>

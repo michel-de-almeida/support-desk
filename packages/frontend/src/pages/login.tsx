@@ -11,9 +11,9 @@ import {
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { Login as LoginIcon } from '@mui/icons-material'
-import { useRef, useState } from 'react'
+import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useAppDispatch } from '../app/hooks'
 import { login } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
 
@@ -22,19 +22,22 @@ const Login = (props: Props) => {
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
     const [isLoading, setisLoading] = useState(false)
+    const isPersist = useRef<HTMLInputElement>(null)
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const authState = useAppSelector((state) => state.auth)
 
-    const handleSubmit = async (e: { preventDefault: () => void }) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         setisLoading(true)
         const res = await dispatch(
             login({
-                email: email.current?.value!,
-                password: password.current?.value!,
+                user: {
+                    email: email.current?.value!,
+                    password: password.current?.value!,
+                },
+                isPersist: isPersist.current?.checked!,
             })
         )
         setisLoading(false)
@@ -99,6 +102,7 @@ const Login = (props: Props) => {
                             <Checkbox
                                 value='remember'
                                 color='primary'
+                                inputRef={isPersist}
                             />
                         }
                         label='Remember me'
@@ -127,8 +131,11 @@ const Login = (props: Props) => {
                         </Grid>
                         <Grid item>
                             <Link
-                                href='#'
+                                href=''
                                 variant='body2'
+                                onClick={() => {
+                                    navigate('/register')
+                                }}
                             >
                                 {"Don't have an account? Sign Up"}
                             </Link>
