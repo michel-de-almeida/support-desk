@@ -23,7 +23,6 @@ const Tickets = (props: Props) => {
                 v.createdAt = new Date(v.createdAt).toLocaleString()
                 return v
             })
-            console.log(res)
 
             setTicketList(res)
         })()

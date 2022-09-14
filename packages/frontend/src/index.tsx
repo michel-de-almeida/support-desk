@@ -4,8 +4,6 @@ import { Provider } from 'react-redux'
 import { store } from './app/store'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import theme from './theme'
 
 const container = document.getElementById('root')!
 const root = createRoot(container)
@@ -13,10 +11,7 @@ const root = createRoot(container)
 root.render(
     <React.StrictMode>
         <Provider store={store}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <App />
-            </ThemeProvider>
+            <App />
         </Provider>
     </React.StrictMode>
 )

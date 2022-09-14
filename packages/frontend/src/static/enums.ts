@@ -1,5 +1,6 @@
 export enum LocalStorageKeys {
     User = 'user',
+    useDark = 'useDark',
 }
 
 export enum RouteURLs {

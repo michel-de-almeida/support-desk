@@ -12,16 +12,27 @@ import {
     Link,
 } from '@mui/material'
 import { Menu as MenuIcon } from '@mui/icons-material'
+import ThemeSwitch from './themeSwitch'
+import { ChangeEvent } from 'react'
+import { setUseDark } from '../features/theme/themeSlice'
 
 interface Props {}
 const Header = (props: Props) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const authState = useAppSelector((state) => state.auth)
+    const themeState = useAppSelector((state) => state.theme)
 
     const handleLogout = () => {
         dispatch(logout())
         navigate('/login')
+    }
+
+    const handleThemeChange = (
+        event: ChangeEvent<HTMLInputElement>,
+        checked: boolean
+    ) => {
+        dispatch(setUseDark(checked))
     }
 
     return (
@@ -77,6 +88,10 @@ const Header = (props: Props) => {
                             </>
                         )}
                     </Stack>
+                    <ThemeSwitch
+                        checked={themeState.useDark}
+                        onChange={handleThemeChange}
+                    />
                 </Toolbar>
             </AppBar>
         </Box>
