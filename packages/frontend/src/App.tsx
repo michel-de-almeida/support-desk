@@ -11,6 +11,7 @@ import Register from './pages/register'
 import Ticket from './pages/ticket'
 import Tickets from './pages/tickets'
 import theme from './theme'
+import { RouteURLs } from './static/enums'
 
 function App() {
     return (
@@ -24,19 +25,19 @@ function App() {
                 <Header />
                 <Routes>
                     <Route
-                        path='/'
+                        path={RouteURLs.Home}
                         element={<Home />}
                     />
                     <Route
-                        path='/login'
+                        path={RouteURLs.Login}
                         element={<Login />}
                     />
                     <Route
-                        path='/register'
+                        path={RouteURLs.Register}
                         element={<Register />}
                     />
                     <Route
-                        path='/tickets'
+                        path={RouteURLs.Tickets}
                         element={
                             <PrivateRoute>
                                 <Tickets />
@@ -44,7 +45,7 @@ function App() {
                         }
                     />
                     <Route
-                        path='/new-ticket'
+                        path={RouteURLs.NewTicket}
                         element={
                             <PrivateRoute>
                                 <NewTicket />
@@ -52,7 +53,7 @@ function App() {
                         }
                     />
                     <Route
-                        path='/ticket/:ticketId'
+                        path={`${RouteURLs.Ticket}/:ticketId`}
                         element={
                             <PrivateRoute>
                                 <Ticket />

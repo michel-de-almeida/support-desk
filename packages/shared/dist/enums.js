@@ -1,6 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TicketStatus = exports.TicketType = void 0;
+exports.TicketStatus = exports.TicketType = exports.API_URLS = void 0;
+var API_URLS;
+(function (API_URLS) {
+    API_URLS["Users"] = "/api/users";
+    API_URLS["Tickets"] = "/api/tickets";
+})(API_URLS = exports.API_URLS || (exports.API_URLS = {}));
 var TicketType;
 (function (TicketType) {
     TicketType["Tires"] = "Tires";

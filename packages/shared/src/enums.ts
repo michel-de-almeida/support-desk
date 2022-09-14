@@ -1,3 +1,8 @@
+export enum API_URLS {
+    Users = '/api/users',
+    Tickets = '/api/tickets',
+}
+
 export enum TicketType {
     Tires = 'Tires',
     Engine = 'Engine',

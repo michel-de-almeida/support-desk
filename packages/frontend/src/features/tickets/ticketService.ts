@@ -1,7 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
-import { ITicket } from 'support-desk-shared'
-
-const API_URL = '/api/tickets/'
+import { ITicket, API_URLS } from 'support-desk-shared'
 
 const getTickets = async (token: string | undefined) => {
     const config: AxiosRequestConfig = {
@@ -10,7 +8,7 @@ const getTickets = async (token: string | undefined) => {
         },
     }
 
-    const response = await axios.get(API_URL, config)
+    const response = await axios.get(API_URLS.Tickets, config)
 
     return response.data as ITicket[]
 }

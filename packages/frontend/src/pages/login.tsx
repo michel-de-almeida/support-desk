@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../app/hooks'
 import { login } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
+import { RouteURLs } from '../static/enums'
 
 interface Props {}
 const Login = (props: Props) => {
@@ -43,7 +44,7 @@ const Login = (props: Props) => {
         setisLoading(false)
 
         if (res.meta.requestStatus === 'fulfilled') {
-            navigate('/')
+            navigate(RouteURLs.Home)
         } else toast.error(res.payload as string)
     }
 
@@ -134,7 +135,7 @@ const Login = (props: Props) => {
                                 href=''
                                 variant='body2'
                                 onClick={() => {
-                                    navigate('/register')
+                                    navigate(RouteURLs.Register)
                                 }}
                             >
                                 {"Don't have an account? Sign Up"}

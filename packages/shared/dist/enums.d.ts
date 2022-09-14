@@ -1,3 +1,7 @@
+export declare enum API_URLS {
+    Users = "/api/users",
+    Tickets = "/api/tickets"
+}
 export declare enum TicketType {
     Tires = "Tires",
     Engine = "Engine",

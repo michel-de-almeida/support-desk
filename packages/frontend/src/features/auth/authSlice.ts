@@ -5,7 +5,7 @@ import { IUserDetail, ILoginData, IRegData } from 'support-desk-shared'
 import { LocalStorageKeys } from '../../static/enums'
 
 // Get user from localstorage
-const localStorageUser = localStorage.getItem(LocalStorageKeys.user)
+const localStorageUser = localStorage.getItem(LocalStorageKeys.User)
 const emptyUser: IUserDetail = {
     id: '',
     username: '',

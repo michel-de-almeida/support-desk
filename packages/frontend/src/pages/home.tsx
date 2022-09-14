@@ -4,6 +4,7 @@ import {
     Support as SupportIcon,
 } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
+import { RouteURLs } from '../static/enums'
 
 interface Props {}
 const Home = (props: Props) => {
@@ -50,7 +51,7 @@ const Home = (props: Props) => {
                         variant='outlined'
                         size='large'
                         onClick={() => {
-                            navigate('/new-ticket')
+                            navigate(RouteURLs.NewTicket)
                         }}
                     >
                         <HelpOutlineIcon sx={{ marginRight: '2px' }} />
@@ -61,7 +62,7 @@ const Home = (props: Props) => {
                         variant='contained'
                         size='large'
                         onClick={() => {
-                            navigate('/tickets')
+                            navigate(RouteURLs.Tickets)
                         }}
                     >
                         <SupportIcon sx={{ marginRight: '2px' }} />
