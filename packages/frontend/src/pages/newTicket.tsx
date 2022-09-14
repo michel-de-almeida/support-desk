@@ -1,4 +1,13 @@
-import { Box, Container, TextField } from '@mui/material'
+import {
+    Box,
+    Container,
+    TextField,
+    MenuItem,
+    SelectChangeEvent,
+    Select,
+    InputLabel,
+    FormControl,
+} from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -7,33 +16,39 @@ import AnimatedDiv from '../components/animatedDiv'
 import { RouteURLs } from '../static/enums'
 import { toast } from 'react-toastify'
 import { TicketService } from '../features/tickets/ticketService'
+import { TicketType } from 'support-desk-shared'
 
 const Ticket = () => {
-    const product = useRef<HTMLInputElement>(null)
+    const [product, setProduct] = useState('')
     const description = useRef<HTMLInputElement>(null)
     const [isLoading, setisLoading] = useState(false)
+    const ticketTypeArray = Object.values(TicketType)
 
     const navigate = useNavigate()
     const user = useAppSelector((state) => state.auth.user)
+
+    const handleSelectChange = (event: SelectChangeEvent) => {
+        setProduct(event.target.value)
+    }
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         setisLoading(true)
+
         try {
             const res = await TicketService.setTicket(user.token, {
-                _id: '',
                 userId: user.id!,
-                product: '',
+                product: product,
                 description: description.current?.value!,
             })
+
             toast.success(res.message)
             navigate(RouteURLs.Home)
         } catch (error: any) {
-            console.log(error)
-            setisLoading(false)
-            toast.error(error as string)
+            toast.error(error.message)
         }
+
         setisLoading(false)
     }
 
@@ -48,22 +63,39 @@ const Ticket = () => {
                     onSubmit={handleSubmit}
                     sx={{ mt: 3 }}
                 >
+                    <FormControl fullWidth>
+                        <InputLabel id='select-product-label'>
+                            Product
+                        </InputLabel>
+                        <Select
+                            required
+                            fullWidth
+                            id='product'
+                            labelId='select-product-label'
+                            label='Product'
+                            value={product}
+                            onChange={handleSelectChange}
+                        >
+                            {ticketTypeArray.map((v) => {
+                                return (
+                                    <MenuItem
+                                        key={v}
+                                        value={v}
+                                    >
+                                        {v}
+                                    </MenuItem>
+                                )
+                            })}
+                        </Select>
+                    </FormControl>
                     <TextField
                         margin='normal'
-                        required
-                        fullWidth
-                        id='product'
-                        label='Product'
-                        name='product'
-                        autoFocus
-                        inputRef={product}
-                    />
-                    <TextField
-                        margin='normal'
+                        multiline
+                        minRows={3}
                         required
                         fullWidth
                         name='description'
-                        label='Description'
+                        label='Please enter a description of the issue'
                         id='description'
                         inputRef={description}
                     />

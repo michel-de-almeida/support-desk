@@ -17,7 +17,7 @@ const Tickets = () => {
 
     useEffect(() => {
         ;(async () => {
-            const res = await TicketService.getTickets(token)
+            const res = await TicketService.getUserTickets(token)
             res.map((v) => {
                 v.createdAt = new Date(v.createdAt!).toLocaleString()
                 return v

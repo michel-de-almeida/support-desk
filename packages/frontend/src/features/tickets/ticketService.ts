@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { ITicket, API_URLS, IResponseMessage } from 'support-desk-shared'
+import { StatusCodes } from 'http-status-codes'
 
 const getUserTickets = async (token: string | undefined) => {
     const config: AxiosRequestConfig = {
@@ -44,9 +45,13 @@ const setTicket = async (token: string | undefined, ticket: ITicket) => {
         },
     }
 
-    const response = await axios.post(API_URLS.Tickets, ticket, config)
-
-    return response.data as IResponseMessage
+    try {
+        const response = await axios.post(API_URLS.Tickets, ticket, config)
+        return response.data as IResponseMessage
+    } catch (error) {
+        const err = error as AxiosError
+        return err.response?.data as IResponseMessage
+    }
 }
 
 const updateTicket = async (token: string | undefined, ticket: ITicket) => {
@@ -56,9 +61,13 @@ const updateTicket = async (token: string | undefined, ticket: ITicket) => {
         },
     }
 
-    const response = await axios.put(API_URLS.Tickets, ticket, config)
-
-    return response.data as IResponseMessage
+    try {
+        const response = await axios.put(API_URLS.Tickets, ticket, config)
+        return response.data as IResponseMessage
+    } catch (error) {
+        const err = error as AxiosError
+        return err.response?.data as IResponseMessage
+    }
 }
 
 const deleteTicket = async (token: string | undefined, ticketId: string) => {
@@ -68,12 +77,16 @@ const deleteTicket = async (token: string | undefined, ticketId: string) => {
         },
     }
 
-    const response = await axios.delete(
-        `${API_URLS.Tickets}/${ticketId}`,
-        config
-    )
-
-    return response.data as IResponseMessage
+    try {
+        const response = await axios.delete(
+            `${API_URLS.Tickets}/${ticketId}`,
+            config
+        )
+        return response.data as IResponseMessage
+    } catch (error) {
+        const err = error as AxiosError
+        return err.response?.data as IResponseMessage
+    }
 }
 
 export const TicketService = {

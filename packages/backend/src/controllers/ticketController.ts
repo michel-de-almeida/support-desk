@@ -70,6 +70,7 @@ const setTicket = expressAsyncHandler(async (req, res) => {
 
     if (ticket) {
         ticket.userId = req.user.id
+
         try {
             const newTicket = await TicketModel.create(ticket)
             res.status(StatusCodes.CREATED).json(
