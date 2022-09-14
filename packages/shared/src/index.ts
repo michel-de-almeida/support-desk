@@ -6,3 +6,4 @@ export {
     ILoginData,
     IUserDetail,
 } from './interfaces/userInterface'
+export { IResponseMessage } from './interfaces/api_Interfaces'
