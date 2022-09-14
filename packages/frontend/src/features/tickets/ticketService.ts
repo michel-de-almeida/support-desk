@@ -76,7 +76,7 @@ const deleteTicket = async (token: string | undefined, ticketId: string) => {
     return response.data as IResponseMessage
 }
 
-export const ticketService = {
+export const TicketService = {
     getUserTickets,
     getTickets,
     getTicket,

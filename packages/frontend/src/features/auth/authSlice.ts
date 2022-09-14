@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { extractErrorMessage } from '../../helpers/utils'
-import { authService } from './authService'
+import { AuthService } from './authService'
 import { IUserDetail, ILoginData, IRegData } from 'support-desk-shared'
 import { LocalStorageKeys } from '../../static/enums'
 
@@ -25,7 +25,7 @@ export const register = createAsyncThunk(
     'auth/register',
     async (user: IRegData, thunkAPI) => {
         try {
-            return await authService.register(user)
+            return await AuthService.register(user)
         } catch (error) {
             return thunkAPI.rejectWithValue(extractErrorMessage(error))
         }
@@ -42,7 +42,7 @@ export const login = createAsyncThunk(
     'auth/login',
     async (loginData: ILoginActionData, thunkAPI) => {
         try {
-            return await authService.login(loginData.user, loginData.isPersist)
+            return await AuthService.login(loginData.user, loginData.isPersist)
         } catch (error) {
             return thunkAPI.rejectWithValue(extractErrorMessage(error))
         }
@@ -54,7 +54,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            authService.logout()
+            AuthService.logout()
             state.user = emptyUser
         },
     },

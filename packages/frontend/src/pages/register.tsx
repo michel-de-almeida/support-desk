@@ -17,8 +17,7 @@ import { toast } from 'react-toastify'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
 
-interface Props {}
-const Register = (props: Props) => {
+const Register = () => {
     const username = useRef<HTMLInputElement>(null)
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)

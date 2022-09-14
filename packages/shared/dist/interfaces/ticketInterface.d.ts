@@ -5,5 +5,5 @@ export interface ITicket {
     product: string;
     description: string;
     status?: TicketStatus;
-    createdAt: string;
+    createdAt?: string;
 }

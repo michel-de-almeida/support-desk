@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAppSelector } from '../app/hooks'
-import { ticketService } from '../features/tickets/ticketService'
+import { TicketService } from '../features/tickets/ticketService'
 import { Container, Link, Chip } from '@mui/material'
 import { ITicket, TicketStatus } from 'support-desk-shared'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
@@ -8,8 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
 
-interface Props {}
-const Tickets = (props: Props) => {
+const Tickets = () => {
     const emptyTicketList: ITicket[] = []
     const token = useAppSelector((state) => state.auth.user.token)
     const [ticketList, setTicketList] = useState(emptyTicketList)
@@ -18,9 +17,9 @@ const Tickets = (props: Props) => {
 
     useEffect(() => {
         ;(async () => {
-            const res = await ticketService.getTickets(token)
+            const res = await TicketService.getTickets(token)
             res.map((v) => {
-                v.createdAt = new Date(v.createdAt).toLocaleString()
+                v.createdAt = new Date(v.createdAt!).toLocaleString()
                 return v
             })
 

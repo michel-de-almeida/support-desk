@@ -7,8 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
 
-interface Props {}
-const Home = (props: Props) => {
+const Home = () => {
     const navigate = useNavigate()
 
     return (

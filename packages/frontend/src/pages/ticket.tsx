@@ -1,13 +1,8 @@
 import { Container } from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
 
 interface Props {}
-const Ticket = (props: Props) => {
-    const navigate = useNavigate()
-    const dispatch = useAppDispatch()
-    const { ticketId } = useParams()
+const NewTicket = (props: Props) => {
     return (
         <AnimatedDiv>
             <Container
@@ -17,4 +12,4 @@ const Ticket = (props: Props) => {
         </AnimatedDiv>
     )
 }
-export default Ticket
+export default NewTicket

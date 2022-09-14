@@ -59,7 +59,7 @@ const TicketItem = ({ ticket }: Props) => {
                                 </Typography>
                                 <div>
                                     {new Date(
-                                        ticket.createdAt
+                                        ticket.createdAt!
                                     ).toLocaleString()}
                                 </div>
                             </>

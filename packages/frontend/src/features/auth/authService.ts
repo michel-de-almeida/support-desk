@@ -36,7 +36,7 @@ const login = async (loginData: ILoginData, isPersist: boolean = false) => {
 // Logout user
 const logout = () => localStorage.removeItem(LocalStorageKeys.User)
 
-export const authService = {
+export const AuthService = {
     register,
     logout,
     login,
