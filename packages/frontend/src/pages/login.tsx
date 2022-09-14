@@ -17,6 +17,7 @@ import { useAppDispatch } from '../app/hooks'
 import { login } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
 import { RouteURLs } from '../static/enums'
+import AnimatedDiv from '../components/animatedDiv'
 
 interface Props {}
 const Login = (props: Props) => {
@@ -49,102 +50,104 @@ const Login = (props: Props) => {
     }
 
     return (
-        <Container
-            component='main'
-            maxWidth='xs'
-        >
-            <Box
-                sx={{
-                    marginTop: 8,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                }}
+        <AnimatedDiv>
+            <Container
+                component='main'
+                maxWidth='xs'
             >
-                <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                    <LoginIcon />
-                </Avatar>
-                <Typography
-                    component='h1'
-                    variant='h5'
-                >
-                    Sign in
-                </Typography>
                 <Box
-                    component='form'
-                    onSubmit={handleSubmit}
-                    sx={{ mt: 3 }}
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
                 >
-                    <TextField
-                        margin='normal'
-                        required
-                        fullWidth
-                        id='email'
-                        label='Email Address'
-                        type='email'
-                        name='email'
-                        autoComplete='email'
-                        autoFocus
-                        inputRef={email}
-                    />
-                    <TextField
-                        margin='normal'
-                        required
-                        fullWidth
-                        name='password'
-                        label='Password'
-                        type='password'
-                        id='password'
-                        autoComplete='current-password'
-                        inputRef={password}
-                    />
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                value='remember'
-                                color='primary'
-                                inputRef={isPersist}
-                            />
-                        }
-                        label='Remember me'
-                    />
-                    <LoadingButton
-                        type='submit'
-                        fullWidth
-                        variant='contained'
-                        size='large'
-                        sx={{ mt: 3, mb: 2 }}
-                        loading={isLoading}
+                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <LoginIcon />
+                    </Avatar>
+                    <Typography
+                        component='h1'
+                        variant='h5'
                     >
-                        Sign In
-                    </LoadingButton>
-                    <Grid container>
-                        <Grid
-                            item
-                            xs
+                        Sign in
+                    </Typography>
+                    <Box
+                        component='form'
+                        onSubmit={handleSubmit}
+                        sx={{ mt: 3 }}
+                    >
+                        <TextField
+                            margin='normal'
+                            required
+                            fullWidth
+                            id='email'
+                            label='Email Address'
+                            type='email'
+                            name='email'
+                            autoComplete='email'
+                            autoFocus
+                            inputRef={email}
+                        />
+                        <TextField
+                            margin='normal'
+                            required
+                            fullWidth
+                            name='password'
+                            label='Password'
+                            type='password'
+                            id='password'
+                            autoComplete='current-password'
+                            inputRef={password}
+                        />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    value='remember'
+                                    color='primary'
+                                    inputRef={isPersist}
+                                />
+                            }
+                            label='Remember me'
+                        />
+                        <LoadingButton
+                            type='submit'
+                            fullWidth
+                            variant='contained'
+                            size='large'
+                            sx={{ mt: 3, mb: 2 }}
+                            loading={isLoading}
                         >
-                            <Link
-                                href='#'
-                                variant='body2'
+                            Sign In
+                        </LoadingButton>
+                        <Grid container>
+                            <Grid
+                                item
+                                xs
                             >
-                                Forgot password?
-                            </Link>
+                                <Link
+                                    href='#'
+                                    variant='body2'
+                                >
+                                    Forgot password?
+                                </Link>
+                            </Grid>
+                            <Grid item>
+                                <Link
+                                    href=''
+                                    variant='body2'
+                                    onClick={() => {
+                                        navigate(RouteURLs.Register)
+                                    }}
+                                >
+                                    {"Don't have an account? Sign Up"}
+                                </Link>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <Link
-                                href=''
-                                variant='body2'
-                                onClick={() => {
-                                    navigate(RouteURLs.Register)
-                                }}
-                            >
-                                {"Don't have an account? Sign Up"}
-                            </Link>
-                        </Grid>
-                    </Grid>
+                    </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </AnimatedDiv>
     )
 }
 export default Login

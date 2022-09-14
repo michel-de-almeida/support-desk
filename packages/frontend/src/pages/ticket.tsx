@@ -1,6 +1,7 @@
+import { Container } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
-import CenterContainer from '../components/centerContainer'
 import { useAppDispatch } from '../app/hooks'
+import AnimatedDiv from '../components/animatedDiv'
 
 interface Props {}
 const Ticket = (props: Props) => {
@@ -8,10 +9,12 @@ const Ticket = (props: Props) => {
     const dispatch = useAppDispatch()
     const { ticketId } = useParams()
     return (
-        <CenterContainer
-            width='70%'
-            children={<></>}
-        ></CenterContainer>
+        <AnimatedDiv>
+            <Container
+                component='main'
+                maxWidth='md'
+            ></Container>
+        </AnimatedDiv>
     )
 }
 export default Ticket

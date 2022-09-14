@@ -6,6 +6,7 @@ import { ITicket, TicketStatus } from 'support-desk-shared'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
+import AnimatedDiv from '../components/animatedDiv'
 
 interface Props {}
 const Tickets = (props: Props) => {
@@ -77,19 +78,20 @@ const Tickets = (props: Props) => {
     ]
 
     return (
-        <Container
-            component='main'
-            maxWidth='md'
-            sx={{ height: 400, marginTop: 8 }}
-        >
-            <DataGrid
-                rows={ticketList}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                getRowId={(row) => row._id}
-            />
-            {/* <List>
+        <AnimatedDiv>
+            <Container
+                component='main'
+                maxWidth='md'
+                sx={{ height: 400, marginTop: 8 }}
+            >
+                <DataGrid
+                    rows={ticketList}
+                    columns={columns}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    getRowId={(row) => row._id}
+                />
+                {/* <List>
                 {ticketList.map((v) => {
                     return (
                         <TicketItem
@@ -99,7 +101,8 @@ const Tickets = (props: Props) => {
                     )
                 })}
             </List> */}
-        </Container>
+            </Container>
+        </AnimatedDiv>
     )
 }
 export default Tickets
