@@ -49,7 +49,6 @@ const setTicket = async (token: string | undefined, ticket: ITicket) => {
         return response.data as IResponseMessage
     } catch (error) {
         const err = error as AxiosError
-        console.log(err.response?.data)
 
         return err.response?.data as IResponseMessage
     }
