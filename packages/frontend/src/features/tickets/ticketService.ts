@@ -1,6 +1,5 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { ITicket, API_URLS, IResponseMessage } from 'support-desk-shared'
-import { StatusCodes } from 'http-status-codes'
 
 const getUserTickets = async (token: string | undefined) => {
     const config: AxiosRequestConfig = {
@@ -50,6 +49,8 @@ const setTicket = async (token: string | undefined, ticket: ITicket) => {
         return response.data as IResponseMessage
     } catch (error) {
         const err = error as AxiosError
+        console.log(err.response?.data)
+
         return err.response?.data as IResponseMessage
     }
 }

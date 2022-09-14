@@ -36,17 +36,17 @@ const Ticket = () => {
 
         setisLoading(true)
 
-        try {
-            const res = await TicketService.setTicket(user.token, {
-                userId: user.id!,
-                product: product,
-                description: description.current?.value!,
-            })
+        const res = await TicketService.setTicket(user.token, {
+            userId: user.id!,
+            product: product,
+            description: description.current?.value!,
+        })
 
+        if (res.payload) {
             toast.success(res.message)
             navigate(RouteURLs.Home)
-        } catch (error: any) {
-            toast.error(error.message)
+        } else {
+            toast.error(res.message)
         }
 
         setisLoading(false)

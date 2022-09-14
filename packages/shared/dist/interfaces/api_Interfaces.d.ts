@@ -1,4 +1,5 @@
 export interface IResponseMessage {
     message: string;
-    payload: any;
+    stack?: string;
+    payload?: any;
 }
