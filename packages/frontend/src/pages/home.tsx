@@ -1,8 +1,5 @@
 import { Typography, Stack, Box, Button, Container } from '@mui/material'
-import {
-    HelpOutline as HelpOutlineIcon,
-    Support as SupportIcon,
-} from '@mui/icons-material'
+import { HelpOutline as HelpOutlineIcon, Support as SupportIcon } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
@@ -12,13 +9,11 @@ const Home = () => {
 
     return (
         <AnimatedDiv>
-            <Container>
-                <Box
-                    ml={'auto'}
-                    mr={'auto'}
-                    mt={2}
-                    width={'70%'}
-                >
+            <Container
+                component='main'
+                maxWidth='md'
+            >
+                <Box mt={8}>
                     <Typography
                         variant={'h2'}
                         fontWeight={700}

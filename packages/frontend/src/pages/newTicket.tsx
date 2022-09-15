@@ -7,6 +7,8 @@ import {
     Select,
     InputLabel,
     FormControl,
+    Typography,
+    Stack,
 } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import { FormEvent, useRef, useState } from 'react'
@@ -18,7 +20,7 @@ import { toast } from 'react-toastify'
 import { TicketService } from '../features/tickets/ticketService'
 import { TicketType } from 'support-desk-shared'
 
-const Ticket = () => {
+const NewTicket = () => {
     const [product, setProduct] = useState('')
     const description = useRef<HTMLInputElement>(null)
     const [isLoading, setisLoading] = useState(false)
@@ -61,12 +63,37 @@ const Ticket = () => {
                 <Box
                     component='form'
                     onSubmit={handleSubmit}
-                    sx={{ mt: 3 }}
+                    mt={8}
                 >
+                    <Typography
+                        variant={'h2'}
+                        fontWeight={700}
+                    >
+                        <Stack
+                            direction={'row'}
+                            alignContent='center'
+                            justifyContent='center'
+                            mb={1}
+                        >
+                            Create a new ticket
+                        </Stack>
+                    </Typography>
+                    <Typography
+                        variant={'h4'}
+                        fontWeight={700}
+                        color={'#828282'}
+                    >
+                        <Stack
+                            direction={'row'}
+                            alignContent='center'
+                            justifyContent='center'
+                            mb={2}
+                        >
+                            Please fill out the form below
+                        </Stack>
+                    </Typography>
                     <FormControl fullWidth>
-                        <InputLabel id='select-product-label'>
-                            Product
-                        </InputLabel>
+                        <InputLabel id='select-product-label'>Product</InputLabel>
                         <Select
                             required
                             fullWidth
@@ -114,4 +141,4 @@ const Ticket = () => {
         </AnimatedDiv>
     )
 }
-export default Ticket
+export default NewTicket

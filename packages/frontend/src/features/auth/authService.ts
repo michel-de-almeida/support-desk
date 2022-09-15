@@ -7,7 +7,7 @@ const register = async (regData: IRegData): Promise<IResponseData> => {
     const response = await axios.post(API_URLS.Users, regData)
 
     if (response.data) {
-        localStorage.setItem(LocalStorageKeys.User, JSON.stringify(response.data))
+        localStorage.setItem(LocalStorageKeys.User, JSON.stringify(response.data.payload))
     }
     return response.data
 }
@@ -17,7 +17,7 @@ const login = async (loginData: ILoginData, isPersist: boolean = false): Promise
     const response = await axios.post(`${API_URLS.Users}/login`, loginData)
 
     if (isPersist && response.data) {
-        localStorage.setItem(LocalStorageKeys.User, JSON.stringify(response.data))
+        localStorage.setItem(LocalStorageKeys.User, JSON.stringify(response.data.payload))
     }
     return response.data
 }

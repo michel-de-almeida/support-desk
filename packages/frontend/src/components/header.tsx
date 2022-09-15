@@ -1,16 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { logout } from '../features/auth/authSlice'
-import {
-    AppBar,
-    Box,
-    Toolbar,
-    Typography,
-    Button,
-    IconButton,
-    Stack,
-    Link,
-} from '@mui/material'
+import { AppBar, Box, Toolbar, Typography, Button, IconButton, Stack, Link } from '@mui/material'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import ThemeSwitch from './themeSwitch'
 import { ChangeEvent } from 'react'
@@ -28,10 +19,7 @@ const Header = (props: Props) => {
         navigate('/login')
     }
 
-    const handleThemeChange = (
-        event: ChangeEvent<HTMLInputElement>,
-        checked: boolean
-    ) => {
+    const handleThemeChange = (event: ChangeEvent<HTMLInputElement>, checked: boolean) => {
         dispatch(setUseDark(checked))
     }
 
@@ -68,7 +56,14 @@ const Header = (props: Props) => {
                         spacing={1.5}
                     >
                         {authState.user.id ? (
-                            <Button onClick={handleLogout}>Logout</Button>
+                            <Button
+                                onClick={handleLogout}
+                                sx={(theme) => {
+                                    return theme.palette.mode === 'light' ? { color: 'white' } : {}
+                                }}
+                            >
+                                Logout
+                            </Button>
                         ) : (
                             <>
                                 <Button
