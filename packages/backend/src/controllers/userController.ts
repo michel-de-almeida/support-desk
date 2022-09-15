@@ -1,5 +1,5 @@
 import expressAsyncHandler from 'express-async-handler'
-import { vaildateJWT } from '../helpers/utils'
+import { getResponseMessage, vaildateJWT } from '../helpers/utils'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes'
@@ -42,14 +42,15 @@ const registerUser = expressAsyncHandler(async (req, res) => {
 
     if (newUser) {
         const token = await updateToken(newUser.id)
-        const resjson: IUserDetail = {
-            id: newUser.id,
-            username: newUser.username,
-            email: newUser.email,
-            token: token,
-            isAdmin: newUser.isAdmin,
-        }
-        res.status(StatusCodes.CREATED).json(resjson)
+        res.status(StatusCodes.CREATED).json(
+            getResponseMessage(true, undefined, {
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email,
+                token: token,
+                isAdmin: newUser.isAdmin,
+            })
+        )
     } else {
         res.status(StatusCodes.BAD_REQUEST)
         throw new Error('Invalid user data')
@@ -67,14 +68,16 @@ const loginUser = expressAsyncHandler(async (req, res) => {
     // Check user and passwords match
     if (user && (await bcrypt.compare(cred.password, user.password))) {
         const token = await updateToken(user.id)
-        const resjson: IUserDetail = {
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            token: token,
-            isAdmin: user.isAdmin,
-        }
-        res.status(StatusCodes.OK).json(resjson)
+
+        res.status(StatusCodes.OK).json(
+            getResponseMessage(true, undefined, {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                token: token,
+                isAdmin: user.isAdmin,
+            })
+        )
     } else {
         res.status(StatusCodes.UNAUTHORIZED)
         throw new Error('Invalid credentials')
@@ -107,12 +110,9 @@ const updateToken = async (userId: string) => {
                 if (token == false) {
                     const newToken = generateToken(userId)
                     //write to database
-                    const updatedUser = await UserModel.findByIdAndUpdate(
-                        userId,
-                        {
-                            token: newToken,
-                        }
-                    )
+                    const updatedUser = await UserModel.findByIdAndUpdate(userId, {
+                        token: newToken,
+                    })
                     if (updatedUser) {
                         return newToken
                     }

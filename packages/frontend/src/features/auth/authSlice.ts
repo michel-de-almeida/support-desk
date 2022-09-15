@@ -12,25 +12,20 @@ const emptyUser: IUserDetail = {
     email: '',
     isAdmin: false,
 }
-const user: IUserDetail = localStorageUser
-    ? JSON.parse(localStorageUser)
-    : emptyUser
+const user: IUserDetail = localStorageUser ? JSON.parse(localStorageUser) : emptyUser
 const initialState = {
     user: user,
     isLoading: false,
 }
 
 // Register new user
-export const register = createAsyncThunk(
-    'auth/register',
-    async (user: IRegData, thunkAPI) => {
-        try {
-            return await AuthService.register(user)
-        } catch (error) {
-            return thunkAPI.rejectWithValue(extractErrorMessage(error))
-        }
+export const register = createAsyncThunk('auth/register', async (user: IRegData, thunkAPI) => {
+    try {
+        return await AuthService.register(user)
+    } catch (error) {
+        return thunkAPI.rejectWithValue(extractErrorMessage(error))
     }
-)
+})
 
 interface ILoginActionData {
     user: ILoginData
@@ -64,7 +59,7 @@ const authSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(register.fulfilled, (state, action) => {
-                state.user = action.payload
+                state.user = action.payload.payload
                 state.isLoading = false
             })
             .addCase(register.rejected, (state) => {
@@ -74,7 +69,7 @@ const authSlice = createSlice({
                 state.isLoading = true
             })
             .addCase(login.fulfilled, (state, action) => {
-                state.user = action.payload
+                state.user = action.payload.payload
                 state.isLoading = false
             })
             .addCase(login.rejected, (state) => {

@@ -41,6 +41,7 @@ const Login = () => {
                 isPersist: isPersist.current?.checked!,
             })
         )
+
         setisLoading(false)
 
         if (res.meta.requestStatus === 'fulfilled') {

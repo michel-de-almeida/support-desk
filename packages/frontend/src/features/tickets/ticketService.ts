@@ -1,43 +1,62 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import { ITicket, API_URLS, IResponseMessage } from 'support-desk-shared'
+import axios, { AxiosRequestConfig } from 'axios'
+import { ITicket, API_URLS, IResponseData } from 'support-desk-shared'
+import { extractErrorMessage } from '../../helpers/utils'
 
-const getUserTickets = async (token: string | undefined) => {
+const getUserTickets = async (token: string | undefined): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
 
-    const response = await axios.get(`${API_URLS.Tickets}/user`, config)
-
-    return response.data as ITicket[]
+    try {
+        const response = await axios.get(`${API_URLS.Tickets}/user`, config)
+        return response.data
+    } catch (error) {
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
+    }
 }
 
-const getTickets = async (token: string | undefined) => {
+const getTickets = async (token: string | undefined): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
 
-    const response = await axios.get(API_URLS.Tickets, config)
-
-    return response.data as ITicket[]
+    try {
+        const response = await axios.get(API_URLS.Tickets, config)
+        return response.data
+    } catch (error) {
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
+    }
 }
 
-const getTicket = async (token: string | undefined, ticketId: string) => {
+const getTicket = async (token: string | undefined, ticketId: string): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
         },
     }
 
-    const response = await axios.get(`${API_URLS.Tickets}/${ticketId}`, config)
-
-    return response.data as ITicket
+    try {
+        const response = await axios.get(`${API_URLS.Tickets}/${ticketId}`, config)
+        return response.data
+    } catch (error) {
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
+    }
 }
 
-const setTicket = async (token: string | undefined, ticket: ITicket) => {
+const setTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -46,15 +65,16 @@ const setTicket = async (token: string | undefined, ticket: ITicket) => {
 
     try {
         const response = await axios.post(API_URLS.Tickets, ticket, config)
-        return response.data as IResponseMessage
+        return response.data
     } catch (error) {
-        const err = error as AxiosError
-
-        return err.response?.data as IResponseMessage
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
     }
 }
 
-const updateTicket = async (token: string | undefined, ticket: ITicket) => {
+const updateTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -63,14 +83,19 @@ const updateTicket = async (token: string | undefined, ticket: ITicket) => {
 
     try {
         const response = await axios.put(API_URLS.Tickets, ticket, config)
-        return response.data as IResponseMessage
+        return response.data
     } catch (error) {
-        const err = error as AxiosError
-        return err.response?.data as IResponseMessage
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
     }
 }
 
-const deleteTicket = async (token: string | undefined, ticketId: string) => {
+const deleteTicket = async (
+    token: string | undefined,
+    ticketId: string
+): Promise<IResponseData> => {
     const config: AxiosRequestConfig = {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -78,14 +103,13 @@ const deleteTicket = async (token: string | undefined, ticketId: string) => {
     }
 
     try {
-        const response = await axios.delete(
-            `${API_URLS.Tickets}/${ticketId}`,
-            config
-        )
-        return response.data as IResponseMessage
+        const response = await axios.delete(`${API_URLS.Tickets}/${ticketId}`, config)
+        return response.data
     } catch (error) {
-        const err = error as AxiosError
-        return err.response?.data as IResponseMessage
+        return {
+            success: false,
+            message: extractErrorMessage(error),
+        }
     }
 }
 

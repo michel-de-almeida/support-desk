@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import { IResponseMessage } from 'support-desk-shared'
+import { IResponseData } from 'support-desk-shared'
 
 const vaildateJWT = (token: string | undefined) => {
     // Verify token
@@ -18,10 +18,12 @@ const vaildateJWT = (token: string | undefined) => {
 }
 
 const getResponseMessage = (
-    message: string,
+    success: boolean,
+    message?: string,
     payload?: any
-): IResponseMessage => {
+): IResponseData => {
     return {
+        success: success,
         message: message,
         payload: payload,
     }

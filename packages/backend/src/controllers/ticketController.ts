@@ -14,7 +14,9 @@ const getTickets = expressAsyncHandler(async (req, res) => {
     if (req.user.isAdmin) {
         try {
             const tickets = await TicketModel.find()
-            res.status(StatusCodes.OK).json(tickets)
+            res.status(StatusCodes.OK).json(
+                getResponseMessage(true, undefined, tickets)
+            )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -34,7 +36,9 @@ const getUserTickets = expressAsyncHandler(async (req, res) => {
     if (userId) {
         try {
             const userTickets = await TicketModel.find({ userId: userId })
-            res.status(StatusCodes.OK).json(userTickets)
+            res.status(StatusCodes.OK).json(
+                getResponseMessage(true, undefined, userTickets)
+            )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -54,7 +58,9 @@ const getTicket = expressAsyncHandler(async (req, res) => {
     if (ticketId) {
         try {
             const ticket = await TicketModel.findById(ticketId)
-            res.status(StatusCodes.OK).json(ticket)
+            res.status(StatusCodes.OK).json(
+                getResponseMessage(true, undefined, ticket)
+            )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -74,7 +80,9 @@ const setTicket = expressAsyncHandler(async (req, res) => {
         try {
             const newTicket = await TicketModel.create(ticket)
             res.status(StatusCodes.CREATED).json(
-                getResponseMessage('Ticket created', { id: newTicket.id })
+                getResponseMessage(true, 'Ticket created', {
+                    ticketId: newTicket.id,
+                })
             )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
@@ -93,7 +101,7 @@ const deleteTicket = expressAsyncHandler(async (req, res) => {
         try {
             await TicketModel.findByIdAndDelete(ticketId)
             res.status(StatusCodes.OK).json(
-                getResponseMessage('Ticket deleted')
+                getResponseMessage(true, 'Ticket deleted')
             )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
@@ -115,7 +123,7 @@ const updateTicket = expressAsyncHandler(async (req, res) => {
                 runValidators: true,
             })
             res.status(StatusCodes.CREATED).json(
-                getResponseMessage('Ticket updated')
+                getResponseMessage(true, 'Ticket updated')
             )
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)

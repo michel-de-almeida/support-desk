@@ -42,7 +42,7 @@ const Ticket = () => {
             description: description.current?.value!,
         })
 
-        if (res.payload) {
+        if (res.success) {
             toast.success(res.message)
             navigate(RouteURLs.Home)
         } else {

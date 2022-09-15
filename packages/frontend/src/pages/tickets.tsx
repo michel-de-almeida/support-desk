@@ -7,6 +7,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
+import { toast } from 'react-toastify'
 
 const Tickets = () => {
     const emptyTicketList: ITicket[] = []
@@ -18,12 +19,15 @@ const Tickets = () => {
     useEffect(() => {
         ;(async () => {
             const res = await TicketService.getUserTickets(token)
-            res.map((v) => {
-                v.createdAt = new Date(v.createdAt!).toLocaleString()
-                return v
-            })
+            const tickets = res.payload as ITicket[]
 
-            setTicketList(res)
+            if (res.success) {
+                tickets.map((v) => {
+                    v.createdAt = new Date(v.createdAt!).toLocaleString()
+                    return v
+                })
+                setTicketList(tickets)
+            } else toast.error(res.message)
         })()
     }, [token])
 
