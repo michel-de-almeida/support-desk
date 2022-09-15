@@ -84,6 +84,7 @@ const Tickets = () => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     getRowId={(row) => row._id}
+                    disableSelectionOnClick
                 />
                 {/* <List>
                 {ticketList.map((v) => {
