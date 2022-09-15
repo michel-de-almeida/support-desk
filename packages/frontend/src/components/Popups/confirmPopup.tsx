@@ -6,16 +6,12 @@ import {
     DialogContentText,
     DialogTitle,
     IconButton,
-    TextField,
 } from '@mui/material'
 import { Close as CloseIcon } from '@mui/icons-material'
-import { RefObject } from 'react'
 
 interface Props {
     title: string
     content: string
-    inputlabel: string
-    inputRef: RefObject<HTMLInputElement>
     rejectButtonText: string
     acceptButtonText: string
     isOpen: boolean
@@ -23,11 +19,13 @@ interface Props {
     onReject: () => void
     onClose: () => void
 }
-const FormPopup = (props: Props) => {
+const ConfirmPopup = (props: Props) => {
     return (
         <Dialog
             open={props.isOpen}
             onClose={props.onClose}
+            fullWidth
+            maxWidth='sm'
         >
             <DialogTitle>
                 {props.title}{' '}
@@ -45,15 +43,7 @@ const FormPopup = (props: Props) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <DialogContentText mb={2}>{props.content}</DialogContentText>
-                <TextField
-                    autoFocus
-                    id='popup-input'
-                    inputRef={props.inputRef}
-                    label={props.inputlabel}
-                    fullWidth
-                    variant='outlined'
-                />
+                <DialogContentText>{props.content}</DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onReject}>{props.rejectButtonText}</Button>
@@ -62,4 +52,4 @@ const FormPopup = (props: Props) => {
         </Dialog>
     )
 }
-export default FormPopup
+export default ConfirmPopup

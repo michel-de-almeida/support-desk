@@ -1,14 +1,14 @@
-import { useState, useEffect } from 'react'
-import { useAppSelector } from '../app/hooks'
-import { TicketService } from '../features/tickets/ticketService'
 import { Container, Link } from '@mui/material'
-import { ITicket, TicketStatus } from 'support-desk-shared'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { RouteURLs } from '../static/enums'
-import AnimatedDiv from '../components/animatedDiv'
 import { toast } from 'react-toastify'
+import { ITicket, TicketStatus } from 'support-desk-shared'
+import { useAppSelector } from '../app/hooks'
+import AnimatedDiv from '../components/animatedDiv'
 import StatusChip from '../components/statusChip'
+import { TicketService } from '../features/tickets/ticketService'
+import { RouteURLs } from '../static/enums'
 
 const Tickets = () => {
     const emptyTicketList: ITicket[] = []
