@@ -46,22 +46,22 @@ const Home = () => {
                             fullWidth
                             variant='outlined'
                             size='large'
+                            startIcon={<HelpOutlineIcon />}
                             onClick={() => {
                                 navigate(RouteURLs.NewTicket)
                             }}
                         >
-                            <HelpOutlineIcon sx={{ marginRight: '2px' }} />
                             Create New Ticket
                         </Button>
                         <Button
                             fullWidth
                             variant='contained'
                             size='large'
+                            startIcon={<SupportIcon />}
                             onClick={() => {
                                 navigate(RouteURLs.Tickets)
                             }}
                         >
-                            <SupportIcon sx={{ marginRight: '2px' }} />
                             View My Tickets
                         </Button>
                     </Stack>
