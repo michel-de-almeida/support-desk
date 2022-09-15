@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useAppSelector } from '../app/hooks'
 import { TicketService } from '../features/tickets/ticketService'
-import { Container, Link, Chip } from '@mui/material'
+import { Container, Link } from '@mui/material'
 import { ITicket, TicketStatus } from 'support-desk-shared'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useNavigate } from 'react-router-dom'
 import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
 import { toast } from 'react-toastify'
+import StatusChip from '../components/statusChip'
 
 const Tickets = () => {
     const emptyTicketList: ITicket[] = []
@@ -62,18 +63,9 @@ const Tickets = () => {
             flex: 1,
             disableColumnMenu: true,
             renderCell: (params: GridRenderCellParams<string>) => (
-                <Chip
-                    label={params.value}
+                <StatusChip
+                    status={params.value as TicketStatus}
                     size='small'
-                    color={
-                        params.value === TicketStatus.Submitted
-                            ? 'info'
-                            : params.value === TicketStatus.Open
-                            ? 'secondary'
-                            : params.value === TicketStatus.Closed
-                            ? 'secondary'
-                            : 'default'
-                    }
                 />
             ),
         },

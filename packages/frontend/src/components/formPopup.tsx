@@ -9,11 +9,13 @@ import {
     TextField,
 } from '@mui/material'
 import { Close as CloseIcon } from '@mui/icons-material'
+import { RefObject } from 'react'
 
 interface Props {
     title: string
     content: string
     inputlabel: string
+    inputRef: RefObject<HTMLInputElement>
     rejectButtonText: string
     acceptButtonText: string
     isOpen: boolean
@@ -47,6 +49,7 @@ const FormPopup = (props: Props) => {
                 <TextField
                     autoFocus
                     id='popup-input'
+                    inputRef={props.inputRef}
                     label={props.inputlabel}
                     fullWidth
                     variant='outlined'

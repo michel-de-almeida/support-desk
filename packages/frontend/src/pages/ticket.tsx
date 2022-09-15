@@ -1,5 +1,5 @@
-import { Button, Container } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Container, Typography, Box, Stack, Card, Button } from '@mui/material'
+import { useEffect, useRef, useState } from 'react'
 import { ITicket } from 'support-desk-shared'
 import { useAppSelector } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
@@ -7,6 +7,7 @@ import { TicketService } from '../features/tickets/ticketService'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import FormPopup from '../components/formPopup'
+import StatusChip from '../components/statusChip'
 
 interface Props {}
 const Ticket = (props: Props) => {
@@ -19,6 +20,7 @@ const Ticket = (props: Props) => {
     const { ticketId } = useParams()
     const [ticket, setTicket] = useState(emptyTicket)
     const [showMemoPopup, setshowMemoPopup] = useState(false)
+    const memo = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         ;(async () => {
@@ -48,16 +50,59 @@ const Ticket = (props: Props) => {
                 component='main'
                 maxWidth='md'
             >
-                <Button
-                    variant='contained'
-                    onClick={toggleMemoPopup}
+                <Card
+                    sx={{
+                        marginTop: 8,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                    }}
+                    variant='outlined'
                 >
-                    Click me
-                </Button>
+                    <Stack
+                        direction='row'
+                        justifyContent='center'
+                        alignItems='center'
+                        spacing={2}
+                        mt={2}
+                    >
+                        <Typography variant='h4'>TicketID: {ticket._id}</Typography>
+                        <StatusChip status={ticket.status} />
+                    </Stack>
+                    <Stack
+                        spacing={1}
+                        mt={3}
+                    >
+                        <Typography variant='h5'>
+                            <Stack direction='row'>
+                                Product:&nbsp;
+                                <Typography
+                                    variant='h6'
+                                    color={'GrayText'}
+                                >
+                                    {ticket.product}
+                                </Typography>
+                            </Stack>
+                        </Typography>
+                        <Typography variant='h5'>
+                            <Stack direction='row'>
+                                Description:&nbsp;
+                                <Typography
+                                    variant='h6'
+                                    color={'GrayText'}
+                                >
+                                    {ticket.description}
+                                </Typography>
+                            </Stack>
+                        </Typography>
+                    </Stack>
+                </Card>
+                <Button onClick={toggleMemoPopup}>Click me</Button>
                 <FormPopup
-                    title={'Poes'}
-                    content={'Yo ma se poes'}
-                    inputlabel={'your poes'}
+                    title={'Memo'}
+                    content={''}
+                    inputlabel={'Enter a Memo'}
+                    inputRef={memo}
                     rejectButtonText={'Cancel'}
                     acceptButtonText={'Save'}
                     isOpen={showMemoPopup}

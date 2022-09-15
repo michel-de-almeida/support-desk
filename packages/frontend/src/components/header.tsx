@@ -1,7 +1,17 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { logout } from '../features/auth/authSlice'
-import { AppBar, Box, Toolbar, Typography, Button, IconButton, Stack, Link } from '@mui/material'
+import {
+    AppBar,
+    Box,
+    Toolbar,
+    Typography,
+    Button,
+    IconButton,
+    Stack,
+    Link,
+    useTheme,
+} from '@mui/material'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import ThemeSwitch from './themeSwitch'
 import { ChangeEvent } from 'react'
@@ -13,6 +23,7 @@ const Header = (props: Props) => {
     const dispatch = useAppDispatch()
     const authState = useAppSelector((state) => state.auth)
     const themeState = useAppSelector((state) => state.theme)
+    const theme = useTheme()
 
     const handleLogout = () => {
         dispatch(logout())
@@ -58,25 +69,40 @@ const Header = (props: Props) => {
                         {authState.user.id ? (
                             <Button
                                 onClick={handleLogout}
-                                sx={(theme) => {
-                                    return theme.palette.mode === 'light' ? { color: 'white' } : {}
-                                }}
+                                variant='outlined'
+                                sx={
+                                    theme.palette.mode === 'light'
+                                        ? { color: 'white', borderColor: 'white' }
+                                        : {}
+                                }
                             >
                                 Logout
                             </Button>
                         ) : (
                             <>
                                 <Button
+                                    variant='outlined'
                                     onClick={() => {
                                         navigate('/login')
                                     }}
+                                    sx={
+                                        theme.palette.mode === 'light'
+                                            ? { color: 'white', borderColor: 'white' }
+                                            : {}
+                                    }
                                 >
                                     Login
                                 </Button>
                                 <Button
+                                    variant='outlined'
                                     onClick={() => {
                                         navigate('/register')
                                     }}
+                                    sx={
+                                        theme.palette.mode === 'light'
+                                            ? { color: 'white', borderColor: 'white' }
+                                            : {}
+                                    }
                                 >
                                     Register
                                 </Button>
