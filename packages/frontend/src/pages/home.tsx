@@ -1,8 +1,8 @@
-import { Typography, Stack, Box, Button, Container } from '@mui/material'
 import { HelpOutline as HelpOutlineIcon, Support as SupportIcon } from '@mui/icons-material'
+import { Box, Button, Container, Stack, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
-import { RouteURLs } from '../static/enums'
 import AnimatedDiv from '../components/animatedDiv'
+import { RouteURLs } from '../static/enums'
 
 const Home = () => {
     const navigate = useNavigate()

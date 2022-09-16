@@ -1,21 +1,13 @@
-import {
-    Avatar,
-    Box,
-    Container,
-    Grid,
-    Link,
-    TextField,
-    Typography,
-} from '@mui/material'
-import { LoadingButton } from '@mui/lab'
 import { Person as PersonIcon } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
+import { Avatar, Box, Container, Grid, Link, TextField, Typography } from '@mui/material'
 import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../app/hooks'
-import { register } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
-import { RouteURLs } from '../static/enums'
+import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
+import { register } from '../features/auth/authSlice'
+import { RouteURLs } from '../static/enums'
 
 const Register = () => {
     const username = useRef<HTMLInputElement>(null)

@@ -1,24 +1,24 @@
+import { LoadingButton } from '@mui/lab'
 import {
     Box,
     Container,
-    TextField,
-    MenuItem,
-    SelectChangeEvent,
-    Select,
-    InputLabel,
     FormControl,
-    Typography,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     Stack,
+    TextField,
+    Typography,
 } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
 import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { TicketType } from 'support-desk-shared'
 import { useAppSelector } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { RouteURLs } from '../static/enums'
-import { toast } from 'react-toastify'
 import { TicketService } from '../features/tickets/ticketService'
-import { TicketType } from 'support-desk-shared'
+import { RouteURLs } from '../static/enums'
 
 const NewTicket = () => {
     const [product, setProduct] = useState('')

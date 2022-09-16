@@ -8,6 +8,10 @@
   "devDependencies": {
     "lerna": "^5.5.1"
   },
+  "scripts": {
+    "start": "node packages/backend/dist/server.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npx lerna bootstrap"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",

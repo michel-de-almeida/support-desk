@@ -1,23 +1,23 @@
+import { Login as LoginIcon } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
-    Container,
-    TextField,
-    Box,
-    Typography,
     Avatar,
+    Box,
+    Checkbox,
+    Container,
     FormControlLabel,
     Grid,
     Link,
-    Checkbox,
+    TextField,
+    Typography,
 } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
-import { Login as LoginIcon } from '@mui/icons-material'
 import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch } from '../app/hooks'
-import { login } from '../features/auth/authSlice'
 import { toast } from 'react-toastify'
-import { RouteURLs } from '../static/enums'
+import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
+import { login } from '../features/auth/authSlice'
+import { RouteURLs } from '../static/enums'
 
 const Login = () => {
     const email = useRef<HTMLInputElement>(null)
