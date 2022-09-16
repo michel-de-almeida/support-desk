@@ -1,16 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import { ITicket, API_URLS, IResponseData } from 'support-desk-shared'
 import { extractErrorMessage } from '../../helpers/utils'
 
 const getUserTickets = async (token: string | undefined): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.get(`${API_URLS.Tickets}/user`, config)
+        const response = await axios.get(`${API_URLS.Tickets}/user`)
         return response.data
     } catch (error) {
         return {
@@ -21,14 +15,8 @@ const getUserTickets = async (token: string | undefined): Promise<IResponseData>
 }
 
 const getTickets = async (token: string | undefined): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.get(API_URLS.Tickets, config)
+        const response = await axios.get(API_URLS.Tickets)
         return response.data
     } catch (error) {
         return {
@@ -39,14 +27,8 @@ const getTickets = async (token: string | undefined): Promise<IResponseData> => 
 }
 
 const getTicket = async (token: string | undefined, ticketId: string): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.get(`${API_URLS.Tickets}/${ticketId}`, config)
+        const response = await axios.get(`${API_URLS.Tickets}/${ticketId}`)
         return response.data
     } catch (error) {
         return {
@@ -57,14 +39,8 @@ const getTicket = async (token: string | undefined, ticketId: string): Promise<I
 }
 
 const setTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.post(API_URLS.Tickets, ticket, config)
+        const response = await axios.post(API_URLS.Tickets, ticket)
         return response.data
     } catch (error) {
         return {
@@ -75,14 +51,8 @@ const setTicket = async (token: string | undefined, ticket: ITicket): Promise<IR
 }
 
 const updateTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.put(API_URLS.Tickets, ticket, config)
+        const response = await axios.put(API_URLS.Tickets, ticket)
         return response.data
     } catch (error) {
         return {
@@ -96,14 +66,8 @@ const deleteTicket = async (
     token: string | undefined,
     ticketId: string
 ): Promise<IResponseData> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
     try {
-        const response = await axios.delete(`${API_URLS.Tickets}/${ticketId}`, config)
+        const response = await axios.delete(`${API_URLS.Tickets}/${ticketId}`)
         return response.data
     } catch (error) {
         return {

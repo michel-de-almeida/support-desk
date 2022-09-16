@@ -1,4 +1,4 @@
-import { Container, Link } from '@mui/material'
+import { Container, Link, Typography } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -14,11 +14,13 @@ const Tickets = () => {
     const emptyTicketList: ITicket[] = []
     const token = useAppSelector((state) => state.auth.user.token)
     const [ticketList, setTicketList] = useState(emptyTicketList)
+    const [isFetching, setisFetching] = useState(false)
 
     const naviagte = useNavigate()
 
     useEffect(() => {
         ;(async () => {
+            setisFetching(true)
             const res = await TicketService.getUserTickets(token)
             const tickets = res.payload as ITicket[]
 
@@ -29,6 +31,7 @@ const Tickets = () => {
                 })
                 setTicketList(tickets)
             } else toast.error(res.message)
+            setisFetching(false)
         })()
     }, [token])
 
@@ -78,12 +81,20 @@ const Tickets = () => {
                 maxWidth='md'
                 sx={{ height: 400, marginTop: 8 }}
             >
+                <Typography
+                    variant='h4'
+                    fontWeight={700}
+                    mb={2}
+                >
+                    My Tickets
+                </Typography>
                 <DataGrid
                     rows={ticketList}
                     columns={columns}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     getRowId={(row) => row._id}
+                    loading={isFetching}
                     disableSelectionOnClick
                 />
                 {/* <List>

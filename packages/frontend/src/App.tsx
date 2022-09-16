@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import Header from './components/header'
 import { darkTheme, lightTheme } from './theme'
 import AnimatedRoutes from './app/animatedRoutes'
+import AxiosMiddleware from './middleware/axiosMiddleware'
 
 function App() {
     const themeState = useAppSelector((state) => state.theme)
@@ -15,6 +16,7 @@ function App() {
 
     return (
         <ThemeProvider theme={currentTheme}>
+            <AxiosMiddleware />
             <CssBaseline />
             <Container fixed>
                 <link
