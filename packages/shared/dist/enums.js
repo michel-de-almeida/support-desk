@@ -19,5 +19,5 @@ var TicketStatus;
 (function (TicketStatus) {
     TicketStatus["Submitted"] = "Submitted";
     TicketStatus["Open"] = "Open";
-    TicketStatus["Closed"] = "closed";
+    TicketStatus["Closed"] = "Closed";
 })(TicketStatus = exports.TicketStatus || (exports.TicketStatus = {}));

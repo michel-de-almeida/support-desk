@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { INote, INoteUpsert, API_URLS, IResponseData } from 'support-desk-shared'
+import { INoteUpsert, API_URLS, IResponseData } from 'support-desk-shared'
 import { extractErrorMessage } from '../../helpers/utils'
 
 //Auth header is attached in the AxiosMiddleware component

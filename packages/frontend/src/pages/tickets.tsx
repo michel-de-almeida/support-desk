@@ -8,19 +8,19 @@ import { useAppSelector } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
 import StatusChip from '../components/statusChip'
 import { TicketService } from '../features/tickets/ticketService'
+import BasePageLayout from '../layouts/basePageLayout'
 import { RouteURLs } from '../static/enums'
 
 const Tickets = () => {
     const emptyTicketList: ITicket[] = []
     const token = useAppSelector((state) => state.auth.user.token)
     const [ticketList, setTicketList] = useState(emptyTicketList)
-    const [isFetching, setisFetching] = useState(false)
+    const [isPageLoading, setisPageLoading] = useState(true)
 
     const naviagte = useNavigate()
 
     useEffect(() => {
         ;(async () => {
-            setisFetching(true)
             const res = await TicketService.getUserTickets(token)
             const tickets = res.payload as ITicket[]
 
@@ -31,7 +31,7 @@ const Tickets = () => {
                 })
                 setTicketList(tickets)
             } else toast.error(res.message)
-            setisFetching(false)
+            setisPageLoading(false)
         })()
     }, [token])
 
@@ -75,12 +75,8 @@ const Tickets = () => {
     ]
 
     return (
-        <AnimatedDiv>
-            <Container
-                component='main'
-                maxWidth='md'
-                sx={{ height: 400, marginTop: 8 }}
-            >
+        <BasePageLayout isPageLoading={isPageLoading}>
+            <Container sx={{ height: 400, marginTop: 8 }}>
                 <Typography
                     variant='h4'
                     fontWeight={700}
@@ -94,21 +90,20 @@ const Tickets = () => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     getRowId={(row) => row._id}
-                    loading={isFetching}
                     disableSelectionOnClick
                 />
                 {/* <List>
-                {ticketList.map((v) => {
-                    return (
-                        <TicketItem
-                            key={v._id}
-                            ticket={v}
-                        />
-                    )
-                })}
-            </List> */}
+        {ticketList.map((v) => {
+            return (
+                <TicketItem
+                    key={v._id}
+                    ticket={v}
+                />
+            )
+        })}
+    </List> */}
             </Container>
-        </AnimatedDiv>
+        </BasePageLayout>
     )
 }
 export default Tickets

@@ -15,5 +15,5 @@ export enum TicketType {
 export enum TicketStatus {
     Submitted = 'Submitted',
     Open = 'Open',
-    Closed = 'closed',
+    Closed = 'Closed',
 }
