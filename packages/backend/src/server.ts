@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import userRouter from './routes/userRoutes'
 import ticketRouter from './routes/ticketRoutes'
+import noteRouter from './routes/noteRoute'
 import cors from 'cors'
 import errorHandler from './middleware/errorMiddleware'
 import { connectDB } from './config/db'
@@ -26,6 +27,7 @@ api.options('*', () => cors())
 
 api.use('/api/users', userRouter)
 api.use('/api/tickets', ticketRouter)
+api.use('/api/notes', noteRouter)
 api.use(errorHandler)
 
 api.listen(port, () => {

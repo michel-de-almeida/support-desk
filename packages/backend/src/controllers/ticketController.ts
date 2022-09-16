@@ -14,9 +14,7 @@ const getTickets = expressAsyncHandler(async (req, res) => {
     if (req.user.isAdmin) {
         try {
             const tickets = await TicketModel.find()
-            res.status(StatusCodes.OK).json(
-                getResponseMessage(true, undefined, tickets)
-            )
+            res.status(StatusCodes.OK).json(getResponseMessage(true, undefined, tickets))
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -36,9 +34,7 @@ const getUserTickets = expressAsyncHandler(async (req, res) => {
     if (userId) {
         try {
             const userTickets = await TicketModel.find({ userId: userId })
-            res.status(StatusCodes.OK).json(
-                getResponseMessage(true, undefined, userTickets)
-            )
+            res.status(StatusCodes.OK).json(getResponseMessage(true, undefined, userTickets))
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -58,9 +54,7 @@ const getTicket = expressAsyncHandler(async (req, res) => {
     if (ticketId) {
         try {
             const ticket = await TicketModel.findById(ticketId)
-            res.status(StatusCodes.OK).json(
-                getResponseMessage(true, undefined, ticket)
-            )
+            res.status(StatusCodes.OK).json(getResponseMessage(true, undefined, ticket))
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)
@@ -100,9 +94,7 @@ const deleteTicket = expressAsyncHandler(async (req, res) => {
     if (ticketId) {
         try {
             await TicketModel.findByIdAndDelete(ticketId)
-            res.status(StatusCodes.OK).json(
-                getResponseMessage(true, 'Ticket deleted')
-            )
+            res.status(StatusCodes.OK).json(getResponseMessage(true, 'Ticket deleted'))
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error('Ticket does not exist')
@@ -111,7 +103,7 @@ const deleteTicket = expressAsyncHandler(async (req, res) => {
 })
 
 // @desc    Update ticket
-// @route   PUT /api/tickets/:id
+// @route   PUT /api/tickets/
 // @access  Private
 const updateTicket = expressAsyncHandler(async (req, res) => {
     const ticket: ITicket = req.body
@@ -122,9 +114,7 @@ const updateTicket = expressAsyncHandler(async (req, res) => {
                 new: true,
                 runValidators: true,
             })
-            res.status(StatusCodes.CREATED).json(
-                getResponseMessage(true, 'Ticket updated')
-            )
+            res.status(StatusCodes.CREATED).json(getResponseMessage(true, 'Ticket updated'))
         } catch (error: any) {
             res.status(StatusCodes.BAD_REQUEST)
             throw new Error(error)

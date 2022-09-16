@@ -10,8 +10,11 @@ const AxiosMiddleware = (props: Props) => {
 
     axios.interceptors.request.use(
         (config) => {
-            config.headers = {
-                Authorization: `Bearer ${token}`,
+            if (token) {
+                config.headers = {
+                    Authorization: `Bearer ${token}`,
+                }
+                console.log('token attached')
             }
             return config
         },

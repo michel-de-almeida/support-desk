@@ -1,7 +1,7 @@
 import { Add as AddIcon } from '@mui/icons-material'
 import { Button, Card, Container, Divider, Stack, Typography } from '@mui/material'
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { ITicket } from 'support-desk-shared'
 import { useAppSelector } from '../app/hooks'
@@ -13,7 +13,8 @@ import { TicketService } from '../features/tickets/ticketService'
 
 interface Props {}
 const Ticket = (props: Props) => {
-    const token = useAppSelector((state) => state.auth.user.token)
+    const { token, id, isAdmin } = useAppSelector((state) => state.auth.user)
+    const navigate = useNavigate()
     const emptyTicket: ITicket = {
         userId: '',
         product: '',
@@ -27,11 +28,18 @@ const Ticket = (props: Props) => {
         ;(async () => {
             const res = await TicketService.getTicket(token, ticketId!)
             const ticket = res.payload as ITicket
-            if (res.success) {
-                setTicket(ticket)
-            } else toast.error(res.message)
+
+            //Only the user that submitted the ticket or an admin can view the ticket
+            if (ticket.userId === id || isAdmin) {
+                if (res.success) {
+                    setTicket(ticket)
+                } else toast.error(res.message)
+            } else {
+                toast.error('Invalid permissions to view this ticket')
+                navigate(-1)
+            }
         })()
-    }, [token, ticketId])
+    }, [token, id, isAdmin, ticketId, navigate])
 
     //Note popup
     const [showNotePopup, setshowNotePopup] = useState(false)
