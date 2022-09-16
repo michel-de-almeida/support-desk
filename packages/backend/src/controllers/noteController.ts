@@ -4,7 +4,7 @@ import { getResponseMessage } from '../helpers/utils'
 import { NoteModel } from '../models/noteModel'
 import { INote, INoteUpsert } from 'support-desk-shared'
 
-// @desc    Gets all notes for a ticketId. Returns INote
+// @desc    Gets all notes for a ticketId. Returns INote[]
 // @route   GET /api/notes/ticket/:id
 // @access  Private
 const getNotesByTicketId = expressAsyncHandler(async (req, res) => {

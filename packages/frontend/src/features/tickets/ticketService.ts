@@ -2,6 +2,8 @@ import axios from 'axios'
 import { ITicket, API_URLS, IResponseData } from 'support-desk-shared'
 import { extractErrorMessage } from '../../helpers/utils'
 
+//Auth header is attached in the AxiosMiddleware component
+
 const getUserTickets = async (token: string | undefined): Promise<IResponseData> => {
     try {
         const response = await axios.get(`${API_URLS.Tickets}/user`)
@@ -14,7 +16,7 @@ const getUserTickets = async (token: string | undefined): Promise<IResponseData>
     }
 }
 
-const getTickets = async (token: string | undefined): Promise<IResponseData> => {
+const getTickets = async (): Promise<IResponseData> => {
     try {
         const response = await axios.get(API_URLS.Tickets)
         return response.data
@@ -26,7 +28,7 @@ const getTickets = async (token: string | undefined): Promise<IResponseData> => 
     }
 }
 
-const getTicket = async (token: string | undefined, ticketId: string): Promise<IResponseData> => {
+const getTicket = async (ticketId: string): Promise<IResponseData> => {
     try {
         const response = await axios.get(`${API_URLS.Tickets}/${ticketId}`)
         return response.data
@@ -38,7 +40,7 @@ const getTicket = async (token: string | undefined, ticketId: string): Promise<I
     }
 }
 
-const setTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
+const setTicket = async (ticket: ITicket): Promise<IResponseData> => {
     try {
         const response = await axios.post(API_URLS.Tickets, ticket)
         return response.data
@@ -50,7 +52,7 @@ const setTicket = async (token: string | undefined, ticket: ITicket): Promise<IR
     }
 }
 
-const updateTicket = async (token: string | undefined, ticket: ITicket): Promise<IResponseData> => {
+const updateTicket = async (ticket: ITicket): Promise<IResponseData> => {
     try {
         const response = await axios.put(API_URLS.Tickets, ticket)
         return response.data
@@ -62,10 +64,7 @@ const updateTicket = async (token: string | undefined, ticket: ITicket): Promise
     }
 }
 
-const deleteTicket = async (
-    token: string | undefined,
-    ticketId: string
-): Promise<IResponseData> => {
+const deleteTicket = async (ticketId: string): Promise<IResponseData> => {
     try {
         const response = await axios.delete(`${API_URLS.Tickets}/${ticketId}`)
         return response.data

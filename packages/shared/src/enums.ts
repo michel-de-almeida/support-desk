@@ -1,6 +1,7 @@
 export enum API_URLS {
     Users = '/api/users',
     Tickets = '/api/tickets',
+    Notes = '/api/notes',
 }
 
 export enum TicketType {

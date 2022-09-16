@@ -26,7 +26,7 @@ const Ticket = (props: Props) => {
 
     useEffect(() => {
         ;(async () => {
-            const res = await TicketService.getTicket(token, ticketId!)
+            const res = await TicketService.getTicket(ticketId!)
             const ticket = res.payload as ITicket
 
             //Only the user that submitted the ticket or an admin can view the ticket

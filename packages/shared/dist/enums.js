@@ -5,6 +5,7 @@ var API_URLS;
 (function (API_URLS) {
     API_URLS["Users"] = "/api/users";
     API_URLS["Tickets"] = "/api/tickets";
+    API_URLS["Notes"] = "/api/notes";
 })(API_URLS = exports.API_URLS || (exports.API_URLS = {}));
 var TicketType;
 (function (TicketType) {

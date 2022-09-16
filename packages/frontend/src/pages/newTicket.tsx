@@ -38,7 +38,7 @@ const NewTicket = () => {
 
         setisLoading(true)
 
-        const res = await TicketService.setTicket(user.token, {
+        const res = await TicketService.setTicket({
             userId: user.id!,
             product: product,
             description: description.current?.value!,
