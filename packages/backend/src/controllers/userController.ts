@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { StatusCodes } from 'http-status-codes'
 import { UserModel } from '../models/userModel'
-import { ILoginData, IRegData, IUser, IUserDetail } from 'support-desk-shared'
+import { ILoginData, IRegData, IUser } from 'support-desk-shared'
 
 // @desc    Register a new user
 // @route   /api/users
@@ -115,13 +115,13 @@ const updateToken = async (userId: string) => {
                     })
                     if (updatedUser) {
                         return newToken
-                    }
+                    } else return null
                 } else return user.token
-            }
+            } else throw new Error('User not found')
         } catch (error: any) {
             throw new Error(error)
         }
-    }
+    } else return null
 }
 
 // Generate token

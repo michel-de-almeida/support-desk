@@ -32,15 +32,15 @@ app.use(errorHandler)
 if (process.env.NODE_ENV === 'prod') {
     app.use(express.static(path.join(__dirname, '../../frontend/build')))
 
-    app.get('*', (req, res) => {
+    app.get('*', (_req, res) => {
         res.sendFile(path.join(__dirname, '../../frontend/build/index.html'))
     })
 } else {
-    app.get('/', (req, res) => {
+    app.get('/', (_req, res) => {
         res.status(200).json({ message: 'Welcome to support desk API' })
     })
 }
 
 app.listen(port, () => {
-    console.log(`listening on port ${port}`)
+    console.log(`Express listening on port ${port}`)
 })

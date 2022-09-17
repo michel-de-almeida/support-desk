@@ -4,9 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TicketModel = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var support_desk_shared_1 = require("support-desk-shared");
-var ticketSchema = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const support_desk_shared_1 = require("support-desk-shared");
+const ticketSchema = new mongoose_1.default.Schema({
     userId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         required: true,
@@ -30,5 +30,6 @@ var ticketSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true,
 });
-var TicketModel = mongoose_1.default.model('Ticket', ticketSchema);
+const TicketModel = mongoose_1.default.model('Ticket', ticketSchema);
 exports.TicketModel = TicketModel;
+//# sourceMappingURL=ticketModel.js.map

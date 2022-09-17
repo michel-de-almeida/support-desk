@@ -4,8 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteModel = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var noteSchema = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const noteSchema = new mongoose_1.default.Schema({
     ticketId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         required: true,
@@ -27,5 +27,6 @@ var noteSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true,
 });
-var NoteModel = mongoose_1.default.model('Note', noteSchema);
+const NoteModel = mongoose_1.default.model('Note', noteSchema);
 exports.NoteModel = NoteModel;
+//# sourceMappingURL=noteModel.js.map

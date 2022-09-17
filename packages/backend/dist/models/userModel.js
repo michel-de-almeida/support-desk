@@ -4,22 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isValidLogin = exports.UserModel = void 0;
-var mongoose_1 = __importDefault(require("mongoose"));
-var isValidLogin = function () { };
+const mongoose_1 = __importDefault(require("mongoose"));
+const isValidLogin = () => { };
 exports.isValidLogin = isValidLogin;
-var userSchema = new mongoose_1.default.Schema({
+const userSchema = new mongoose_1.default.Schema({
     username: {
         type: String,
-        required: [true, "'name' is a required field"],
+        required: [true, `'name' is a required field`],
     },
     email: {
         type: String,
-        required: [true, "'email' is a required field"],
+        required: [true, `'email' is a required field`],
         unique: true,
     },
     password: {
         type: String,
-        required: [true, "'password' is a required field"],
+        required: [true, `'password' is a required field`],
     },
     isAdmin: {
         type: Boolean,
@@ -33,5 +33,6 @@ var userSchema = new mongoose_1.default.Schema({
 }, {
     timestamps: true,
 });
-var UserModel = mongoose_1.default.model('User', userSchema);
+const UserModel = mongoose_1.default.model('User', userSchema);
 exports.UserModel = UserModel;
+//# sourceMappingURL=userModel.js.map

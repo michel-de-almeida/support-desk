@@ -1,193 +1,92 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NoteController = void 0;
-var express_async_handler_1 = __importDefault(require("express-async-handler"));
-var http_status_codes_1 = require("http-status-codes");
-var utils_1 = require("../helpers/utils");
-var noteModel_1 = require("../models/noteModel");
-// @desc    Gets all notes for a ticketId. Returns INote[]
-// @route   GET /api/notes/ticket/:id
-// @access  Private
-var getNotesByTicketId = (0, express_async_handler_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var ticketId, notes, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                ticketId = req.params.id;
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, noteModel_1.NoteModel.find({ ticketId: ticketId })];
-            case 2:
-                notes = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, undefined, notes));
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
-                throw new Error(error_1);
-            case 4: return [2 /*return*/];
+const express_async_handler_1 = __importDefault(require("express-async-handler"));
+const http_status_codes_1 = require("http-status-codes");
+const utils_1 = require("../helpers/utils");
+const noteModel_1 = require("../models/noteModel");
+const getNotesByTicketId = (0, express_async_handler_1.default)(async (req, res) => {
+    const ticketId = req.params.id;
+    try {
+        const notes = await noteModel_1.NoteModel.find({ ticketId: ticketId });
+        res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, undefined, notes));
+    }
+    catch (error) {
+        res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+        throw new Error(error);
+    }
+});
+const getNote = (0, express_async_handler_1.default)(async (req, res) => {
+    const noteId = req.params.id;
+    if (noteId) {
+        try {
+            const note = await noteModel_1.NoteModel.findById(noteId);
+            res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, undefined, note));
         }
-    });
-}); });
-// @desc    Get note. Returns INote
-// @route   GET /api/note/:id
-// @access  Private
-var getNote = (0, express_async_handler_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var noteId, note, error_2;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                noteId = req.params.id;
-                if (!noteId) return [3 /*break*/, 4];
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, noteModel_1.NoteModel.findById(noteId)];
-            case 2:
-                note = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, undefined, note));
-                return [3 /*break*/, 4];
-            case 3:
-                error_2 = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
-                throw new Error(error_2);
-            case 4: return [2 /*return*/];
+        catch (error) {
+            res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+            throw new Error(error);
         }
-    });
-}); });
-// @desc    Create note
-// @route   POST /api/notes
-// @access  Private
-var setNote = (0, express_async_handler_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var reqbody, note, newNote, error_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                reqbody = req.body;
-                if (!reqbody) return [3 /*break*/, 4];
-                note = {
-                    ticketId: reqbody.ticketId,
-                    noteText: reqbody.noteText,
-                    createdBy_Id: req.user.id,
-                    createdBy_Name: req.user.username,
-                };
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, noteModel_1.NoteModel.create(note)];
-            case 2:
-                newNote = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.CREATED).json((0, utils_1.getResponseMessage)(true, 'Note created', {
-                    noteId: newNote.id,
-                }));
-                return [3 /*break*/, 4];
-            case 3:
-                error_3 = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
-                throw new Error(error_3);
-            case 4: return [2 /*return*/];
+    }
+});
+const setNote = (0, express_async_handler_1.default)(async (req, res) => {
+    const reqbody = req.body;
+    if (reqbody) {
+        const note = {
+            ticketId: reqbody.ticketId,
+            noteText: reqbody.noteText,
+            createdBy_Id: req.user.id,
+            createdBy_Name: req.user.username,
+        };
+        try {
+            const newNote = await noteModel_1.NoteModel.create(note);
+            res.status(http_status_codes_1.StatusCodes.CREATED).json((0, utils_1.getResponseMessage)(true, 'Note created', {
+                noteId: newNote.id,
+            }));
         }
-    });
-}); });
-// @desc    Update Note
-// @route   PUT /api/notes/
-// @access  Private
-var updateNote = (0, express_async_handler_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var reqbody, note, error_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                reqbody = req.body;
-                if (!reqbody) return [3 /*break*/, 4];
-                note = {
-                    ticketId: reqbody.ticketId,
-                    noteText: reqbody.noteText,
-                    createdBy_Id: req.user.id,
-                    createdBy_Name: req.user.username,
-                };
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, noteModel_1.NoteModel.findByIdAndUpdate(reqbody._id, note, {
-                        new: true,
-                        runValidators: true,
-                    })];
-            case 2:
-                _a.sent();
-                res.status(http_status_codes_1.StatusCodes.CREATED).json((0, utils_1.getResponseMessage)(true, 'Note updated'));
-                return [3 /*break*/, 4];
-            case 3:
-                error_4 = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
-                throw new Error(error_4);
-            case 4: return [2 /*return*/];
+        catch (error) {
+            res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+            throw new Error(error);
         }
-    });
-}); });
-// @desc    Delete note
-// @route   DELETE /api/notes/:id
-// @access  Private
-var deleteNote = (0, express_async_handler_1.default)(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var noteId, error_5;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                noteId = req.params.id;
-                if (!noteId) return [3 /*break*/, 4];
-                _a.label = 1;
-            case 1:
-                _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, noteModel_1.NoteModel.findByIdAndDelete(noteId)];
-            case 2:
-                _a.sent();
-                res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, 'Note deleted'));
-                return [3 /*break*/, 4];
-            case 3:
-                error_5 = _a.sent();
-                res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
-                throw new Error('Note does not exist');
-            case 4: return [2 /*return*/];
+    }
+});
+const updateNote = (0, express_async_handler_1.default)(async (req, res) => {
+    const reqbody = req.body;
+    if (reqbody) {
+        const note = {
+            ticketId: reqbody.ticketId,
+            noteText: reqbody.noteText,
+            createdBy_Id: req.user.id,
+            createdBy_Name: req.user.username,
+        };
+        try {
+            await noteModel_1.NoteModel.findByIdAndUpdate(reqbody._id, note, {
+                new: true,
+                runValidators: true,
+            });
+            res.status(http_status_codes_1.StatusCodes.CREATED).json((0, utils_1.getResponseMessage)(true, 'Note updated'));
         }
-    });
-}); });
-exports.NoteController = { getNotesByTicketId: getNotesByTicketId, getNote: getNote, setNote: setNote, updateNote: updateNote, deleteNote: deleteNote };
+        catch (error) {
+            res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+            throw new Error(error);
+        }
+    }
+});
+const deleteNote = (0, express_async_handler_1.default)(async (req, res) => {
+    const noteId = req.params.id;
+    if (noteId) {
+        try {
+            await noteModel_1.NoteModel.findByIdAndDelete(noteId);
+            res.status(http_status_codes_1.StatusCodes.OK).json((0, utils_1.getResponseMessage)(true, 'Note deleted'));
+        }
+        catch (error) {
+            res.status(http_status_codes_1.StatusCodes.BAD_REQUEST);
+            throw new Error('Note does not exist');
+        }
+    }
+});
+exports.NoteController = { getNotesByTicketId, getNote, setNote, updateNote, deleteNote };
+//# sourceMappingURL=noteController.js.map
