@@ -10,7 +10,17 @@
     "react-redux": "^8.0.2",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4",
-    "support-desk-shared": "*"
+    "support-desk-shared": "*",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/lab": "^5.0.0-alpha.99",
+    "@mui/material": "^5.10.4",
+    "@mui/x-data-grid": "^5.17.2",
+    "axios": "^0.27.2",
+    "framer-motion": "^7.3.5",
+    "react-router-dom": "^6.3.0",
+    "react-toastify": "^9.0.8"
   },
   "devDependencies": {
     "@types/jest": "^27.5.2",

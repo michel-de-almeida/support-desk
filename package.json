@@ -13,23 +13,5 @@
   "scripts": {
     "start": "npm run serve --prefix packages/backend",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npx lerna bootstrap && npm run build --prefix packages/frontend"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/lab": "^5.0.0-alpha.99",
-    "@mui/material": "^5.10.4",
-    "@mui/x-data-grid": "^5.17.2",
-    "@reduxjs/toolkit": "^1.8.5",
-    "apollo-server-core": "^3.10.2",
-    "apollo-server-express": "^3.10.2",
-    "axios": "^0.27.2",
-    "framer-motion": "^7.3.5",
-    "graphql": "^16.6.0",
-    "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0",
-    "react-toastify": "^9.0.8",
-    "styled-components": "^5.3.5"
   }
 }
