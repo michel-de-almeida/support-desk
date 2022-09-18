@@ -6,6 +6,7 @@
     "@typegoose/typegoose": "^9.12.0",
     "apollo-server-core": "^3.10.2",
     "apollo-server-express": "^3.10.2",
+    "argon2": "^0.29.1",
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.2",
     "dotenv": "^11.0.0",
@@ -20,7 +21,7 @@
     "type-graphql": "^1.1.1"
   },
   "scripts": {
-    "start": "nodemon src/server.ts",
+    "start": "nodemon dist/server.js",
     "watch": "tsc -w",
     "serve": "node dist/server.js"
   },

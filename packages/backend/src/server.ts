@@ -4,9 +4,10 @@ import dotenv from 'dotenv'
 import express from 'express'
 import path from 'path'
 import { connectDB } from './config/db'
-import errorHandler from './middleware/errorMiddleware'
+//import errorHandler from './middleware/errorMiddleware'
 import { HelloResolver } from './resolvers/helloResolver'
 import { buildSchema } from 'type-graphql'
+import { UserResolver } from './resolvers/userResolver'
 
 declare global {
     namespace Express {
@@ -22,10 +23,12 @@ declare global {
     connectDB()
     const app = express()
 
-    const server = new ApolloServer({ schema: await buildSchema({ resolvers: [HelloResolver] }) })
+    const server = new ApolloServer({
+        schema: await buildSchema({ resolvers: [HelloResolver, UserResolver] }),
+    })
     await server.start()
     server.applyMiddleware({ app })
-    app.use(errorHandler)
+    //app.use(errorHandler)
 
     if (process.env.NODE_ENV === 'prod') {
         app.use(express.static(path.join(__dirname, '../../frontend/build')))
@@ -41,6 +44,7 @@ declare global {
 
     app.listen(port, () => {
         console.log(`Express listening on port ${port}`)
+        console.log(`GraphQL running at http://localhost:${port}${server.graphqlPath}`)
     })
 })()
 

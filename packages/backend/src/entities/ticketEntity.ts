@@ -32,17 +32,14 @@ class Note {
 
 @ObjectType()
 export class Ticket {
-    // @ts-ignore
-    @Field((type) => ID)
+    @Field(() => ID)
     readonly _id?: string
 
-    // @ts-ignore
-    @Field((type) => User)
+    @Field(() => User)
     @prop({ ref: () => User, required: true })
     public userRef!: Ref<User>
 
-    //@ts-ignore
-    @Field((type) => TicketType)
+    @Field(() => TicketType)
     @prop({ required: [true, 'Please select a product'], enum: TicketType })
     public product!: TicketType
 
@@ -50,13 +47,11 @@ export class Ticket {
     @prop({ required: [true, 'Please enter a description of the issue'] })
     public description!: string
 
-    //@ts-ignore
-    @Field((type) => TicketStatus)
+    @Field(() => TicketStatus)
     @prop({ required: true, enum: TicketStatus, default: TicketStatus.Submitted })
     public status?: TicketStatus
 
-    //@ts-ignore
-    @Field((type) => [Note], { nullable: true })
+    @Field(() => [Note], { nullable: true })
     @prop({ type: () => Note })
     public notes?: Note[]
 }
