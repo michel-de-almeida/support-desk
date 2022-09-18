@@ -12,7 +12,7 @@ registerEnumType(Role, { name: 'Role', description: 'The user Role' })
 export class User {
     // @ts-ignore
     @Field((type) => ID)
-    readonly id: string
+    readonly _id?: string
 
     @Field()
     @prop({ required: [true, 'Please enter a username'] })

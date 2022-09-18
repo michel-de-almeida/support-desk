@@ -34,9 +34,10 @@ class Note {
 export class Ticket {
     // @ts-ignore
     @Field((type) => ID)
-    readonly id: string
+    readonly _id?: string
 
-    @Field()
+    // @ts-ignore
+    @Field((type) => User)
     @prop({ ref: () => User, required: true })
     public userRef!: Ref<User>
 
@@ -52,7 +53,7 @@ export class Ticket {
     //@ts-ignore
     @Field((type) => TicketStatus)
     @prop({ required: true, enum: TicketStatus, default: TicketStatus.Submitted })
-    public status!: TicketStatus
+    public status?: TicketStatus
 
     //@ts-ignore
     @Field((type) => [Note], { nullable: true })

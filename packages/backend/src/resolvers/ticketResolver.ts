@@ -1,65 +1,32 @@
-import {
-    Arg,
-    Args,
-    Authorized,
-    Ctx,
-    Mutation,
-    Query,
-    Resolver,
-    ID,
-    FieldResolver,
-} from 'type-graphql'
+import { Arg, Mutation, Query, Resolver } from 'type-graphql'
 import { Ticket, TicketModel } from '../entities/ticketEntity'
+import { TicketInput } from './types/ticket-input'
 
 @Resolver(Ticket)
-export class RecipeResolver {
+export class TicketResolver {
     @Query((returns) => Ticket, { nullable: true })
-    recipe(@Arg('recipeId', (type) => ID) recipeId: ObjectId) {
-        return TicketModel.findById(recipeId)
+    ticket(@Arg('id') id: string) {
+        return TicketModel.findById(id)
     }
 
     @Query((returns) => [Ticket])
-    async recipes(): Promise<Ticket[]> {
-        return await RecipeModel.find({})
+    async tickets(): Promise<Ticket[]> {
+        return await TicketModel.find()
     }
 
-    @Mutation((returns) => Recipe)
-    async addRecipe(
-        @Arg('recipe') recipeInput: RecipeInput,
-        @Ctx() { user }: Context
-    ): Promise<Recipe> {
-        const recipe = new RecipeModel({
-            ...recipeInput,
-            author: user._id,
-        } as Recipe)
-
-        await recipe.save()
-        return recipe
-    }
-
-    @Mutation((returns) => Recipe)
-    async rate(@Arg('rate') rateInput: RateInput, @Ctx() { user }: Context): Promise<Recipe> {
-        // find the recipe
-        const recipe = await RecipeModel.findById(rateInput.recipeId)
-        if (!recipe) {
-            throw new Error('Invalid recipe ID')
+    @Mutation((returns) => TicketModel)
+    async setTicket(@Arg('ticket') ticketInput: TicketInput): Promise<Ticket> {
+        const ticket: Ticket = {
+            ...ticketInput,
+            userRef: undefined,
         }
+        const newTicket = TicketModel.create(ticket)
+        // const recipe = new RecipeModel({
+        //     ...recipeInput,
+        //     author: user._id,
+        // } as Recipe)
 
-        // set the new recipe rate
-        const newRate: Rate = {
-            value: rateInput.value,
-            user: user._id,
-            date: new Date(),
-        }
-
-        // update the recipe
-        recipe.ratings.push(newRate)
-        await recipe.save()
-        return recipe
-    }
-
-    @FieldResolver()
-    async author(@Root() recipe: Recipe): Promise<User> {
-        return (await UserModel.findById(recipe.author))!
+        // await recipe.save()
+        return newTicket
     }
 }
