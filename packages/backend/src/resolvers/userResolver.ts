@@ -64,7 +64,6 @@ export class UserResolver {
         if (!isPasswordValid) {
             return { errors: [{ field: 'password', message: 'Invalid password' }] }
         }
-
         return { user: user }
     }
 }
