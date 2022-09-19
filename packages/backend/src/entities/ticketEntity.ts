@@ -19,15 +19,14 @@ export enum TicketStatus {
 registerEnumType(TicketStatus, { name: 'TicketStatus', description: 'The status of the ticket' })
 
 @ObjectType()
-class Note {
+export class Note {
     @Field()
     @prop({ required: [true, 'Please enter a note'] })
-    noteText: string
+    noteText!: string
 
-    // @ts-ignore
-    @Field((type) => User)
-    @prop({ required: true })
-    public createdBy: User
+    @Field(() => ID)
+    @prop({ ref: () => User, required: true })
+    public createdBy!: Ref<User>
 }
 
 @ObjectType()
@@ -36,8 +35,8 @@ export class Ticket {
     readonly _id?: string
 
     @Field(() => User)
-    @prop({ ref: () => User, required: true })
-    public userRef!: Ref<User>
+    @prop({ required: true })
+    public userDoc!: User
 
     @Field(() => TicketType)
     @prop({ required: [true, 'Please select a product'], enum: TicketType })
@@ -52,7 +51,7 @@ export class Ticket {
     public status?: TicketStatus
 
     @Field(() => [Note], { nullable: true })
-    @prop({ type: () => Note })
+    @prop({ type: () => [Note] })
     public notes?: Note[]
 }
 

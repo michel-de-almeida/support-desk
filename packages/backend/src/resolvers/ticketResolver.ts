@@ -7,13 +7,14 @@ import {
     UpdateTicketInput,
     TicketResponse,
     TicketsResponse,
+    CreateNote,
 } from './types/ticket-IO'
 
 @Resolver(Ticket)
 export class TicketResolver {
     @Query(() => TicketsResponse)
     async userTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
-        const tickets = await TicketModel.find({userRef.id = req})
+        const tickets = await TicketModel.find({ 'userDoc._id': req.session.userId })
 
         if (!tickets) {
             return {
@@ -70,7 +71,7 @@ export class TicketResolver {
         const user = await UserModel.findById(req.session.userId)
         const ticket: Ticket = {
             ...options,
-            userRef: user!,
+            userDoc: user!,
         }
         const newTicket = await TicketModel.create(ticket)
 
@@ -82,6 +83,26 @@ export class TicketResolver {
         }
 
         return { success: true, ticket: newTicket }
+    }
+
+    @Mutation(() => TicketResponse)
+    async setTicketNote(
+        @Arg('ticketId') id: string,
+        @Arg('note') note: CreateNote
+    ): Promise<TicketResponse> {
+        const ticket = await TicketModel.findByIdAndUpdate(
+            id,
+            { $push: { notes: note } },
+            { new: true }
+        )
+
+        console.log(ticket)
+
+        if (!ticket) {
+            return { success: false, errors: [{ message: 'Error adding note' }] }
+        }
+
+        return { success: true, ticket: ticket }
     }
 
     @Mutation(() => TicketResponse)
