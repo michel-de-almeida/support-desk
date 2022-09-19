@@ -148,7 +148,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse, { nullable: true })
+    @Mutation(() => TicketResponse)
     async deleteTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
