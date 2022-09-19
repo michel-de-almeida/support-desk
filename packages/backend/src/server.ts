@@ -13,6 +13,7 @@ import { buildSchema } from 'type-graphql'
 import { IAppContext } from './interfaces'
 import { TicketResolver } from './resolvers/ticketResolver'
 import { UserResolver } from './resolvers/userResolver'
+import { customAuthChecker } from './middleware/authChecker'
 
 declare global {
     namespace Express {
@@ -49,7 +50,11 @@ declare global {
     )
 
     const server = new ApolloServer({
-        schema: await buildSchema({ resolvers: [UserResolver, TicketResolver] }),
+        schema: await buildSchema({
+            resolvers: [UserResolver, TicketResolver],
+            emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
+            authChecker: customAuthChecker,
+        }),
         context: ({ req, res }): IAppContext => ({ req, res }),
         csrfPrevention: true,
         cache: 'bounded',

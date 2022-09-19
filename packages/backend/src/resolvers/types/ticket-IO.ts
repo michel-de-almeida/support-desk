@@ -38,7 +38,7 @@ export class CreateNote implements Partial<Note> {
 @ObjectType()
 export class TicketResponse {
     @Field()
-    success: boolean
+    success!: boolean
 
     @Field(() => Ticket, { nullable: true })
     ticket?: Ticket
@@ -50,7 +50,7 @@ export class TicketResponse {
 @ObjectType()
 export class TicketsResponse {
     @Field()
-    success: boolean
+    success!: boolean
 
     @Field(() => [Ticket], { nullable: true })
     tickets?: Ticket[]

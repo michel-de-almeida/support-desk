@@ -1,6 +1,6 @@
 import { UserModel } from '../entities/userEntity'
 import { IAppContext } from '../interfaces'
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql'
+import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Ticket, TicketModel } from '../entities/ticketEntity'
 import {
     CreateTicketInput,
@@ -12,6 +12,7 @@ import {
 
 @Resolver(Ticket)
 export class TicketResolver {
+    @Authorized()
     @Query(() => TicketsResponse)
     async userTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
         const tickets = await TicketModel.find({ 'userDoc._id': req.session.userId })
@@ -25,6 +26,7 @@ export class TicketResolver {
         return { success: true, tickets: tickets }
     }
 
+    @Authorized()
     @Query(() => TicketsResponse)
     async tickets(): Promise<TicketsResponse> {
         const tickets = await TicketModel.find()
@@ -38,8 +40,9 @@ export class TicketResolver {
         return { success: true, tickets: tickets }
     }
 
+    @Authorized()
     @Query(() => TicketResponse, { nullable: true })
-    async getTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
+    async ticket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
                 success: false,
@@ -55,6 +58,7 @@ export class TicketResolver {
         return { success: true, ticket: ticket }
     }
 
+    @Authorized()
     @Mutation(() => TicketResponse)
     async setTicket(
         @Arg('ticket') options: CreateTicketInput,
@@ -85,6 +89,7 @@ export class TicketResolver {
         return { success: true, ticket: newTicket }
     }
 
+    @Authorized()
     @Mutation(() => TicketResponse)
     async setTicketNote(
         @Arg('ticketId') id: string,
@@ -97,12 +102,16 @@ export class TicketResolver {
         )
 
         if (!ticket) {
-            return { success: false, errors: [{ message: 'Error adding note' }] }
+            return {
+                success: false,
+                errors: [{ message: 'An error occured while attempting to add a note' }],
+            }
         }
 
         return { success: true, ticket: ticket }
     }
 
+    @Authorized()
     @Mutation(() => TicketResponse)
     async updateTicket(@Arg('ticket') options: UpdateTicketInput): Promise<TicketResponse> {
         if (!options.id) {
@@ -138,6 +147,7 @@ export class TicketResolver {
         return { success: true, ticket: updatedTicket }
     }
 
+    @Authorized()
     @Mutation(() => TicketResponse, { nullable: true })
     async deleteTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {

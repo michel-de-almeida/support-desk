@@ -6,5 +6,5 @@ export class FieldError {
     field?: string
 
     @Field()
-    message: string
+    message!: string
 }
