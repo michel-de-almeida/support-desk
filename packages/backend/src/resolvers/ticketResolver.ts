@@ -96,8 +96,6 @@ export class TicketResolver {
             { new: true }
         )
 
-        console.log(ticket)
-
         if (!ticket) {
             return { success: false, errors: [{ message: 'Error adding note' }] }
         }
