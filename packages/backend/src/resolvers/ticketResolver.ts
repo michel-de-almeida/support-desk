@@ -41,7 +41,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Query(() => TicketResponse, { nullable: true })
+    @Query(() => TicketResponse)
     async ticket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
