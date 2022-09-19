@@ -4,13 +4,13 @@ import { FieldError } from './errorOutput'
 
 @InputType()
 export class UserRegInput implements Partial<User> {
-    @Field()
+    @Field({ nullable: false })
     username!: string
 
-    @Field()
+    @Field({ nullable: false })
     email!: string
 
-    @Field()
+    @Field({ nullable: false })
     password!: string
 
     @Field(() => Role)
@@ -19,10 +19,10 @@ export class UserRegInput implements Partial<User> {
 
 @InputType()
 export class UserLoginInput implements Partial<User> {
-    @Field()
+    @Field({ nullable: false })
     email!: string
 
-    @Field()
+    @Field({ nullable: false })
     password!: string
 }
 
