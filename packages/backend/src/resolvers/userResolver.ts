@@ -1,12 +1,16 @@
-import { Arg, Mutation, Resolver } from 'type-graphql'
+import { Arg, Mutation, Resolver, Ctx } from 'type-graphql'
 import { UserLoginInput, UserRegInput, UserResponse } from './types/user-IO'
 import { User, UserModel } from '../entities/userEntity'
 import argon2 from 'argon2'
+import { IAppContext } from '../interfaces'
 
 @Resolver()
 export class UserResolver {
     @Mutation(() => UserResponse)
-    async register(@Arg('options') options: UserRegInput): Promise<UserResponse> {
+    async register(
+        @Arg('options') options: UserRegInput,
+        @Ctx() { req }: IAppContext
+    ): Promise<UserResponse> {
         // Find if user already exists and return an error if it does
         const userExists = await UserModel.findOne({ email: options.email })
 
@@ -38,11 +42,16 @@ export class UserResolver {
             }
         }
 
+        req.session.userId = newUser.id
+
         return { user: newUser }
     }
 
     @Mutation(() => UserResponse)
-    async login(@Arg('options') options: UserLoginInput): Promise<UserResponse> {
+    async login(
+        @Arg('options') options: UserLoginInput,
+        @Ctx() { req }: IAppContext
+    ): Promise<UserResponse> {
         // Find the user
         const user = await UserModel.findOne({ email: options.email })
 
@@ -64,6 +73,9 @@ export class UserResolver {
         if (!isPasswordValid) {
             return { errors: [{ field: 'password', message: 'Invalid password' }] }
         }
+
+        req.session.userId = user.id
+
         return { user: user }
     }
 }

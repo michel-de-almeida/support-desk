@@ -13,5 +13,7 @@
   "scripts": {
     "start": "npm run serve --prefix packages/backend",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npx lerna bootstrap && npm run build --prefix packages/frontend"
+  },
+  "dependencies": {
   }
 }
