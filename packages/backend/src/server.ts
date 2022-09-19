@@ -38,7 +38,7 @@ declare global {
             name: 'qid',
             store: new RedisStore({ client: redis, disableTouch: true }),
             cookie: {
-                maxAge: 1000 * 60 * 60 * 24,
+                maxAge: 1000 * 60 * 60 * 24, // 24 hours
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'prod', // cookie only works in https
                 sameSite: 'lax', //csrf
@@ -52,7 +52,7 @@ declare global {
     const server = new ApolloServer({
         schema: await buildSchema({
             resolvers: [UserResolver, TicketResolver],
-            emitSchemaFile: path.resolve(__dirname, 'schema.gql'),
+            emitSchemaFile: true,
             authChecker: customAuthChecker,
         }),
         context: ({ req, res }): IAppContext => ({ req, res }),
