@@ -3,7 +3,7 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input CreateTicketInput {
+input CreateTicket {
   description: String!
   product: TicketType!
 }
@@ -14,12 +14,12 @@ type FieldError {
 }
 
 type Mutation {
-  deleteTicket(ticketId: String!): TicketResponse
+  deleteTicket(ticketId: String!): TicketResponse!
   login(options: UserLoginInput!): UserResponse!
   register(options: UserRegInput!): UserResponse!
-  setTicket(ticket: CreateTicketInput!): TicketResponse!
+  setTicket(ticket: CreateTicket!): TicketResponse!
   setTicketNote(note: String!, ticketId: String!): TicketResponse!
-  updateTicket(ticket: UpdateTicketInput!): TicketResponse!
+  updateTicket(ticket: UpdateTicket!): TicketResponse!
 }
 
 type Note {
@@ -29,7 +29,7 @@ type Note {
 
 type Query {
   getUserRoles: [Role!]!
-  ticket(ticketId: String!): TicketResponse
+  ticket(ticketId: String!): TicketResponse!
   tickets: TicketsResponse!
   userTickets: TicketsResponse!
 }
@@ -77,7 +77,7 @@ type TicketsResponse {
   tickets: [Ticket!]
 }
 
-input UpdateTicketInput {
+input UpdateTicket {
   description: String
   id: String!
   product: TicketType
