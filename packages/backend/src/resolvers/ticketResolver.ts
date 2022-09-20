@@ -2,17 +2,14 @@ import { Role, UserModel } from '../entities/userEntity'
 import { IAppContext } from '../interfaces'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Note, Ticket, TicketModel } from '../entities/ticketEntity'
-import {
-    CreateTicket,
-    UpdateTicket,
-    TicketResponse,
-    TicketsResponse,
-} from './types/ticket-IO'
+import { CreateTicket, UpdateTicket, TicketResponse, TicketsResponse } from './types/ticket-IO'
 
 @Resolver(Ticket)
 export class TicketResolver {
     @Authorized()
-    @Query(() => TicketsResponse)
+    @Query(() => TicketsResponse, {
+        description: 'Returns the tickets that the currently logged user has submitted',
+    })
     async userTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
         const tickets = await TicketModel.find({ 'userDoc._id': req.session.userId })
 
@@ -26,7 +23,9 @@ export class TicketResolver {
     }
 
     @Authorized(Role.Admin)
-    @Query(() => TicketsResponse)
+    @Query(() => TicketsResponse, {
+        description: 'Returns all tickets in the collection. Admin only',
+    })
     async tickets(): Promise<TicketsResponse> {
         const tickets = await TicketModel.find()
 
@@ -40,7 +39,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Query(() => TicketResponse)
+    @Query(() => TicketResponse, { description: 'Returns the Ticket with the given Id' })
     async ticket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
@@ -58,7 +57,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse)
+    @Mutation(() => TicketResponse, { description: 'Creates a ticket' })
     async setTicket(
         @Arg('ticket') options: CreateTicket,
         @Ctx() { req }: IAppContext
@@ -89,7 +88,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse)
+    @Mutation(() => TicketResponse, { description: 'Creates a note for the given ticket' })
     async setTicketNote(
         @Arg('ticketId') id: string,
         @Arg('note') noteText: string,
@@ -114,7 +113,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse)
+    @Mutation(() => TicketResponse, { description: 'Updates a ticket' })
     async updateTicket(@Arg('ticket') options: UpdateTicket): Promise<TicketResponse> {
         if (!options.id) {
             return { success: false, errors: [{ message: 'Please provide the ticketId' }] }
@@ -142,7 +141,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse)
+    @Mutation(() => TicketResponse, { description: 'Deletes a ticket' })
     async deleteTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {

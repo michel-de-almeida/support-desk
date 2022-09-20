@@ -14,11 +14,22 @@ type FieldError {
 }
 
 type Mutation {
+  """Deletes a ticket"""
   deleteTicket(ticketId: String!): TicketResponse!
+
+  """Signs a user in"""
   login(options: UserLoginInput!): UserResponse!
+
+  """Creates a new User"""
   register(options: UserRegInput!): UserResponse!
+
+  """Creates a ticket"""
   setTicket(ticket: CreateTicket!): TicketResponse!
+
+  """Creates a note for the given ticket"""
   setTicketNote(note: String!, ticketId: String!): TicketResponse!
+
+  """Updates a ticket"""
   updateTicket(ticket: UpdateTicket!): TicketResponse!
 }
 
@@ -29,8 +40,14 @@ type Note {
 
 type Query {
   getUserRoles: [Role!]!
+
+  """Returns the Ticket with the given Id"""
   ticket(ticketId: String!): TicketResponse!
+
+  """Returns all tickets in the collection. Admin only"""
   tickets: TicketsResponse!
+
+  """Returns the tickets that the currently logged user has submitted"""
   userTickets: TicketsResponse!
 }
 

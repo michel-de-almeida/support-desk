@@ -6,7 +6,7 @@ import { IAppContext } from '../interfaces'
 
 @Resolver()
 export class UserResolver {
-    @Mutation(() => UserResponse)
+    @Mutation(() => UserResponse, { description: 'Creates a new User' })
     async register(
         @Arg('options') options: UserRegInput,
         @Ctx() { req }: IAppContext
@@ -47,7 +47,7 @@ export class UserResolver {
         return { user: newUser }
     }
 
-    @Mutation(() => UserResponse)
+    @Mutation(() => UserResponse, { description: 'Signs a user in' })
     async login(
         @Arg('options') options: UserLoginInput,
         @Ctx() { req }: IAppContext
