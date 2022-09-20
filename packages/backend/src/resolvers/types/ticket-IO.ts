@@ -3,7 +3,7 @@ import { Ticket, TicketStatus, TicketType } from '../../entities/ticketEntity'
 import { FieldError } from './errorOutput'
 
 @InputType()
-export class CreateTicketInput implements Partial<Ticket> {
+export class CreateTicket implements Partial<Ticket> {
     @Field(() => TicketType, { nullable: false })
     public product!: TicketType
 
@@ -12,7 +12,7 @@ export class CreateTicketInput implements Partial<Ticket> {
 }
 
 @InputType()
-export class UpdateTicketInput implements Partial<Ticket> {
+export class UpdateTicket implements Partial<Ticket> {
     @Field({ nullable: false })
     id!: string
 

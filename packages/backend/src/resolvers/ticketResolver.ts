@@ -3,8 +3,8 @@ import { IAppContext } from '../interfaces'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Note, Ticket, TicketModel } from '../entities/ticketEntity'
 import {
-    CreateTicketInput,
-    UpdateTicketInput,
+    CreateTicket,
+    UpdateTicket,
     TicketResponse,
     TicketsResponse,
 } from './types/ticket-IO'
@@ -40,7 +40,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Query(() => TicketResponse, { nullable: true })
+    @Query(() => TicketResponse)
     async ticket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
@@ -60,7 +60,7 @@ export class TicketResolver {
     @Authorized()
     @Mutation(() => TicketResponse)
     async setTicket(
-        @Arg('ticket') options: CreateTicketInput,
+        @Arg('ticket') options: CreateTicket,
         @Ctx() { req }: IAppContext
     ): Promise<TicketResponse> {
         if (!options.product) {
@@ -115,7 +115,7 @@ export class TicketResolver {
 
     @Authorized()
     @Mutation(() => TicketResponse)
-    async updateTicket(@Arg('ticket') options: UpdateTicketInput): Promise<TicketResponse> {
+    async updateTicket(@Arg('ticket') options: UpdateTicket): Promise<TicketResponse> {
         if (!options.id) {
             return { success: false, errors: [{ message: 'Please provide the ticketId' }] }
         }
@@ -142,7 +142,7 @@ export class TicketResolver {
     }
 
     @Authorized()
-    @Mutation(() => TicketResponse, { nullable: true })
+    @Mutation(() => TicketResponse)
     async deleteTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
