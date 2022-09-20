@@ -1,4 +1,4 @@
-import { prop, getModelForClass, Ref } from '@typegoose/typegoose'
+import { prop, getModelForClass } from '@typegoose/typegoose'
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 import { User } from '../entities/userEntity'
 
@@ -24,9 +24,9 @@ export class Note {
     @prop({ required: [true, 'Please enter a note'] })
     noteText!: string
 
-    @Field(() => ID)
-    @prop({ ref: () => User, required: true })
-    public createdBy!: Ref<User>
+    @Field()
+    @prop({ required: true })
+    public createdBy!: User
 }
 
 @ObjectType()

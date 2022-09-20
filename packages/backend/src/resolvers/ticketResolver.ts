@@ -1,13 +1,12 @@
-import { UserModel } from '../entities/userEntity'
+import { Role, UserModel } from '../entities/userEntity'
 import { IAppContext } from '../interfaces'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
-import { Ticket, TicketModel } from '../entities/ticketEntity'
+import { Note, Ticket, TicketModel } from '../entities/ticketEntity'
 import {
     CreateTicketInput,
     UpdateTicketInput,
     TicketResponse,
     TicketsResponse,
-    CreateNote,
 } from './types/ticket-IO'
 
 @Resolver(Ticket)
@@ -26,7 +25,7 @@ export class TicketResolver {
         return { success: true, tickets: tickets }
     }
 
-    @Authorized()
+    @Authorized(Role.Admin)
     @Query(() => TicketsResponse)
     async tickets(): Promise<TicketsResponse> {
         const tickets = await TicketModel.find()
@@ -93,8 +92,11 @@ export class TicketResolver {
     @Mutation(() => TicketResponse)
     async setTicketNote(
         @Arg('ticketId') id: string,
-        @Arg('note') note: CreateNote
+        @Arg('note') noteText: string,
+        @Ctx() { req }: IAppContext
     ): Promise<TicketResponse> {
+        const user = await UserModel.findById(req.session.userId)
+        const note: Note = { noteText: noteText, createdBy: user! }
         const ticket = await TicketModel.findByIdAndUpdate(
             id,
             { $push: { notes: note } },
@@ -116,14 +118,6 @@ export class TicketResolver {
     async updateTicket(@Arg('ticket') options: UpdateTicketInput): Promise<TicketResponse> {
         if (!options.id) {
             return { success: false, errors: [{ message: 'Please provide the ticketId' }] }
-        }
-
-        if (!options.product) {
-            return { success: false, errors: [{ message: 'Please provide a product' }] }
-        }
-
-        if (!options.description) {
-            return { success: false, errors: [{ message: 'Please provide a description' }] }
         }
 
         const ticketExists = await TicketModel.findById(options.id)

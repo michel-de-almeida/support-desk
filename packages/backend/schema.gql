@@ -3,11 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-input CreateNote {
-  createdBy: ID!
-  noteText: String!
-}
-
 input CreateTicketInput {
   description: String!
   product: TicketType!
@@ -23,16 +18,17 @@ type Mutation {
   login(options: UserLoginInput!): UserResponse!
   register(options: UserRegInput!): UserResponse!
   setTicket(ticket: CreateTicketInput!): TicketResponse!
-  setTicketNote(note: CreateNote!, ticketId: String!): TicketResponse!
+  setTicketNote(note: String!, ticketId: String!): TicketResponse!
   updateTicket(ticket: UpdateTicketInput!): TicketResponse!
 }
 
 type Note {
-  createdBy: ID!
+  createdBy: User!
   noteText: String!
 }
 
 type Query {
+  getUserRoles: [Role!]!
   ticket(ticketId: String!): TicketResponse
   tickets: TicketsResponse!
   userTickets: TicketsResponse!
@@ -82,16 +78,16 @@ type TicketsResponse {
 }
 
 input UpdateTicketInput {
-  description: String!
+  description: String
   id: String!
-  product: TicketType!
+  product: TicketType
   status: TicketStatus
 }
 
 type User {
   _id: ID!
   email: String!
-  role: Role!
+  roles: [Role!]!
   token: String
   username: String!
 }
@@ -104,7 +100,7 @@ input UserLoginInput {
 input UserRegInput {
   email: String!
   password: String!
-  role: Role!
+  roles: [Role!]
   username: String!
 }
 

@@ -1,6 +1,6 @@
-import { Arg, Mutation, Resolver, Ctx } from 'type-graphql'
+import { Arg, Mutation, Resolver, Ctx, Query, Authorized } from 'type-graphql'
 import { UserLoginInput, UserRegInput, UserResponse } from './types/user-IO'
-import { User, UserModel } from '../entities/userEntity'
+import { Role, User, UserModel } from '../entities/userEntity'
 import argon2 from 'argon2'
 import { IAppContext } from '../interfaces'
 
@@ -29,7 +29,7 @@ export class UserResolver {
             email: options.email,
             password: hashedPassword,
             username: options.username,
-            role: options.role && options.role,
+            roles: options.roles! && options.roles!,
         }
 
         const newUser = await UserModel.create(user)
@@ -77,5 +77,13 @@ export class UserResolver {
         req.session.userId = user.id
 
         return { user: user }
+    }
+
+    @Authorized()
+    @Query(() => [Role])
+    async getUserRoles(@Ctx() { req }: IAppContext): Promise<Role[]> {
+        const user = await UserModel.findById(req.session.userId, { roles: 1, _id: 0 })
+
+        return user?.roles!
     }
 }

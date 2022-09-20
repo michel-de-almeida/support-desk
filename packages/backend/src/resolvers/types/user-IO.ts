@@ -13,8 +13,8 @@ export class UserRegInput implements Partial<User> {
     @Field({ nullable: false })
     password!: string
 
-    @Field(() => Role)
-    role?: Role
+    @Field(() => [Role], { nullable: true })
+    roles?: Role[]
 }
 
 @InputType()

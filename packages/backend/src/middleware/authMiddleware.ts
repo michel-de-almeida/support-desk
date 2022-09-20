@@ -1,15 +1,12 @@
 import { vaildateJWT } from '../helpers/utils'
 import expressAsyncHandler from 'express-async-handler'
-import { UserModel } from '../models/userModel'
+import { UserModel } from '../entities/userEntity'
 import { StatusCodes } from 'http-status-codes'
 
 const protect = expressAsyncHandler(async (req, res, next) => {
     let token
 
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith('Bearer')
-    ) {
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             // Get token from header
             token = req.headers.authorization.split(' ')[1]
@@ -18,9 +15,7 @@ const protect = expressAsyncHandler(async (req, res, next) => {
 
             // Get user from token
             if (decoded) {
-                req.user = await UserModel.findById(decoded.userId).select(
-                    '-password'
-                )
+                req.user = await UserModel.findById(decoded.userId).select('-password')
             }
 
             if (!req.user) {

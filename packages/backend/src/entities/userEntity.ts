@@ -2,8 +2,8 @@ import { prop, getModelForClass } from '@typegoose/typegoose'
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 
 export enum Role {
-    Admin,
-    User,
+    Admin = 'Admin',
+    User = 'User',
 }
 
 registerEnumType(Role, { name: 'Role', description: 'The user Role' })
@@ -24,9 +24,14 @@ export class User {
     @prop({ required: [true, 'Please enter a password'] })
     public password!: string
 
-    @Field(() => Role)
-    @prop({ required: [true, 'User role is requried'], enum: Role, default: Role.User })
-    public role?: Role
+    @Field(() => [Role])
+    @prop({
+        type: String,
+        required: [true, 'At least one role is required'],
+        enum: Role,
+        default: [Role.User],
+    })
+    public roles!: Role[]
 
     @Field({ nullable: true })
     @prop()
