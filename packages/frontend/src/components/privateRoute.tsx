@@ -1,14 +1,13 @@
 import { Navigate } from 'react-router-dom'
-import { useMeQuery } from '../generated/graphql'
+import { useAppSelector } from '../app/hooks'
 
 interface Props {
     children: JSX.Element
 }
 const PrivateRoute = ({ children }: Props) => {
-    //graphQL hook
-    const [{ data }] = useMeQuery()
+    const { user } = useAppSelector((state) => state.auth)
 
-    if (data?.me._id) return children
+    if (user?._id) return children
 
     return <Navigate to='/login' />
 }

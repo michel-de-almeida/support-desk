@@ -14,7 +14,9 @@ import {
 import { FormEvent, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
+import { setUser } from '../features/auth/authSlice'
 import { useLoginMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
@@ -31,6 +33,9 @@ const Login = () => {
     //router
     const navigate = useNavigate()
 
+    //redux
+    const dispatch = useAppDispatch()
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
@@ -44,6 +49,7 @@ const Login = () => {
             if (res.data?.login.errors) toast.error(toErrorMap(res.data?.login.errors).toString())
             //naviagte on success
             if (res.data?.login.user) {
+                dispatch(setUser(res.data.login.user))
                 navigate(RouteURLs.Home)
             }
         } catch (error: any) {

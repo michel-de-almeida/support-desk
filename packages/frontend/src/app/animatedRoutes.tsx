@@ -49,7 +49,12 @@ const AnimatedRoutes = (props: Props) => {
                 />
                 <Route
                     path={`${RouteURLs.Ticket}/:ticketId`}
-                    element={<Ticket />}
+                    element={
+                        <Ticket />
+                        // <PrivateRoute>
+
+                        // </PrivateRoute>
+                    }
                 />
             </Routes>
         </AnimatePresence>

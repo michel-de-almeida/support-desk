@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { logout } from '../features/auth/authSlice'
 import {
     AppBar,
     Box,
@@ -14,19 +13,36 @@ import {
 } from '@mui/material'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import ThemeSwitch from './themeSwitch'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect } from 'react'
 import { setUseDark } from '../features/theme/themeSlice'
+import { useLogoutMutation, useMeQuery, User } from '../generated/graphql'
+import { setUser } from '../features/auth/authSlice'
 
 interface Props {}
 const Header = (props: Props) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
-    const authState = useAppSelector((state) => state.auth)
     const themeState = useAppSelector((state) => state.theme)
+    const { user } = useAppSelector((state) => state.auth)
     const theme = useTheme()
+    const [{ data }, getMe] = useMeQuery({ pause: true })
+    const [, doLogout] = useLogoutMutation()
 
-    const handleLogout = () => {
-        dispatch(logout())
+    const emptyUser: User = {
+        _id: '',
+        email: '',
+        roles: [],
+        username: '',
+    }
+
+    useEffect(() => {
+        getMe()
+        dispatch(setUser(data?.me!))
+    }, [dispatch, getMe, data?.me])
+
+    const handleLogout = async () => {
+        await doLogout({})
+        dispatch(setUser(emptyUser))
         navigate('/login')
     }
 
@@ -36,6 +52,7 @@ const Header = (props: Props) => {
 
     return (
         <Box sx={{ flexGrow: 1 }}>
+            <div>{}</div>
             <AppBar position='static'>
                 <Toolbar>
                     <IconButton
@@ -66,7 +83,7 @@ const Header = (props: Props) => {
                         direction={'row'}
                         spacing={1.5}
                     >
-                        {authState.user._id ? (
+                        {user?._id ? (
                             <Button
                                 onClick={handleLogout}
                                 variant='outlined'
