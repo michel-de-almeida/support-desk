@@ -8,6 +8,14 @@ import Header from './components/header'
 import { darkTheme, lightTheme } from './theme'
 import AnimatedRoutes from './app/animatedRoutes'
 import AxiosMiddleware from './middleware/axiosMiddleware'
+import { createClient, Provider as URQLProvider } from 'urql'
+
+const client = createClient({
+    url: 'http://localhost:5000/graphql',
+    fetchOptions: {
+        credentials: 'include',
+    },
+})
 
 function App() {
     const themeState = useAppSelector((state) => state.theme)
@@ -17,6 +25,7 @@ function App() {
     return (
         <ThemeProvider theme={currentTheme}>
             <AxiosMiddleware />
+
             <CssBaseline />
             <Container fixed>
                 <link
@@ -25,8 +34,10 @@ function App() {
                 />
 
                 <Router>
-                    <Header />
-                    <AnimatedRoutes />
+                    <URQLProvider value={client}>
+                        <Header />
+                        <AnimatedRoutes />
+                    </URQLProvider>
                 </Router>
                 <ToastContainer
                     position='top-center'

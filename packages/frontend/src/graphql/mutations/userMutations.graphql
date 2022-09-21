@@ -1,0 +1,31 @@
+mutation Login($options: UserLoginInput!) {
+  login(options: $options) {
+    errors {
+      message
+      field
+    }
+    user {
+      _id
+      email
+      username
+      roles
+      token
+    }
+  }
+}
+
+mutation Register($options: UserRegInput!) {
+  register(options: $options) {
+    errors {
+      field
+      message
+    }
+    user {
+      _id
+      username
+      email
+      roles
+      token
+    }
+  }
+}

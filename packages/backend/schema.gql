@@ -39,7 +39,11 @@ type Note {
 }
 
 type Query {
+  """Returns the roles assigned to the currently logged user"""
   getUserRoles: [Role!]!
+
+  """Returns the currently logged user"""
+  me: User!
 
   """Returns the Ticket with the given Id"""
   ticket(ticketId: String!): TicketResponse!

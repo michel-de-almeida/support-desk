@@ -12,6 +12,11 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -20,6 +25,7 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
+  "exclude": ["node_modules"],
   "include": [
     "src"
   ]

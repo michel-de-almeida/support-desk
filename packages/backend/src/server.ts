@@ -64,7 +64,7 @@ declare global {
     server.applyMiddleware({
         app,
         cors: {
-            origin: ['https://studio.apollographql.com'],
+            origin: ['https://studio.apollographql.com', 'http://localhost:5000'],
             credentials: true,
         },
     })

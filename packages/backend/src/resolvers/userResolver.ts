@@ -80,7 +80,15 @@ export class UserResolver {
     }
 
     @Authorized()
-    @Query(() => [Role])
+    @Query(() => User, { description: 'Returns the currently logged user' })
+    async me(@Ctx() { req }: IAppContext): Promise<User> {
+        const user = await UserModel.findById(req.session.userId)
+
+        return user!
+    }
+
+    @Authorized()
+    @Query(() => [Role], { description: 'Returns the roles assigned to the currently logged user' })
     async getUserRoles(@Ctx() { req }: IAppContext): Promise<Role[]> {
         const user = await UserModel.findById(req.session.userId, { roles: 1, _id: 0 })
 
