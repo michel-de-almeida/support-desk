@@ -1,5 +1,5 @@
 import { Role, UserModel } from '../entities/userEntity'
-import { IAppContext } from '../interfaces'
+import { AppContext } from '../interfaces'
 import { Arg, Authorized, Ctx, Mutation, Query, Resolver } from 'type-graphql'
 import { Note, Ticket, TicketModel } from '../entities/ticketEntity'
 import { CreateTicket, UpdateTicket, TicketResponse, TicketsResponse } from './types/ticket-IO'
@@ -10,7 +10,7 @@ export class TicketResolver {
     @Query(() => TicketsResponse, {
         description: 'Returns the tickets that the currently logged user has submitted',
     })
-    async getUserTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
+    async getUserTickets(@Ctx() { req }: AppContext): Promise<TicketsResponse> {
         const tickets = await TicketModel.find({ 'userDoc._id': req.session.userId })
 
         if (!tickets) throw Error('An error occured while attempting to fetch tickets')
@@ -53,7 +53,7 @@ export class TicketResolver {
     @Mutation(() => TicketResponse, { description: 'Creates a ticket' })
     async setTicket(
         @Arg('ticket') options: CreateTicket,
-        @Ctx() { req }: IAppContext
+        @Ctx() { req }: AppContext
     ): Promise<TicketResponse> {
         const response = {} as TicketResponse
         if (!options.product) {
@@ -84,7 +84,7 @@ export class TicketResolver {
     async setTicketNote(
         @Arg('ticketId') id: string,
         @Arg('note') noteText: string,
-        @Ctx() { req }: IAppContext
+        @Ctx() { req }: AppContext
     ): Promise<TicketResponse> {
         const user = await UserModel.findById(req.session.userId)
         const note: Note = { noteText: noteText, createdBy: user!, createdAt: new Date() }

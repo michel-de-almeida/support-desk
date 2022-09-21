@@ -33,6 +33,7 @@ export type Mutation = {
   deleteTicket: TicketResponse;
   /** Signs a user in */
   login: UserResponse;
+  logout: Scalars['Boolean'];
   /** Creates a new User */
   register: UserResponse;
   /** Creates a ticket */
@@ -77,10 +78,10 @@ export type MutationUpdateTicketArgs = {
 export type Note = {
   __typename?: 'Note';
   _id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
+  createdAt?: Maybe<Scalars['DateTime']>;
   createdBy: User;
   noteText: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
+  updatedAt?: Maybe<Scalars['DateTime']>;
 };
 
 export type Query = {
@@ -187,21 +188,21 @@ export type SetTicketMutationVariables = Exact<{
 }>;
 
 
-export type SetTicketMutation = { __typename?: 'Mutation', setTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type SetTicketMutation = { __typename?: 'Mutation', setTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type UpdateTicketMutationVariables = Exact<{
   ticket: UpdateTicket;
 }>;
 
 
-export type UpdateTicketMutation = { __typename?: 'Mutation', updateTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type UpdateTicketMutation = { __typename?: 'Mutation', updateTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type DeleteTicketMutationVariables = Exact<{
   ticketId: Scalars['String'];
 }>;
 
 
-export type DeleteTicketMutation = { __typename?: 'Mutation', deleteTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type DeleteTicketMutation = { __typename?: 'Mutation', deleteTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type SetTicketNoteMutationVariables = Exact<{
   note: Scalars['String'];
@@ -209,7 +210,7 @@ export type SetTicketNoteMutationVariables = Exact<{
 }>;
 
 
-export type SetTicketNoteMutation = { __typename?: 'Mutation', setTicketNote: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type SetTicketNoteMutation = { __typename?: 'Mutation', setTicketNote: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type LoginMutationVariables = Exact<{
   options: UserLoginInput;
@@ -225,22 +226,27 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null, user?: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } | null } };
 
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
 export type GetUserTicketsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUserTicketsQuery = { __typename?: 'Query', getUserTickets: { __typename?: 'TicketsResponse', tickets?: Array<{ __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type GetUserTicketsQuery = { __typename?: 'Query', getUserTickets: { __typename?: 'TicketsResponse', tickets?: Array<{ __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type GetTicketsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTicketsQuery = { __typename?: 'Query', getTickets: { __typename?: 'TicketsResponse', tickets?: Array<{ __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type GetTicketsQuery = { __typename?: 'Query', getTickets: { __typename?: 'TicketsResponse', tickets?: Array<{ __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null }> | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type GetTicketQueryVariables = Exact<{
   ticketId: Scalars['String'];
 }>;
 
 
-export type GetTicketQuery = { __typename?: 'Query', getTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
+export type GetTicketQuery = { __typename?: 'Query', getTicket: { __typename?: 'TicketResponse', ticket?: { __typename?: 'Ticket', _id: string, product: TicketType, description: string, status: TicketStatus, createdAt?: any | null, updatedAt?: any | null, userDoc: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null }, notes?: Array<{ __typename?: 'Note', _id: string, noteText: string, createdAt?: any | null, updatedAt?: any | null, createdBy: { __typename?: 'User', _id: string, username: string, email: string, roles: Array<Role>, token?: string | null } }> | null } | null, errors?: Array<{ __typename?: 'FieldError', field: string, message: string }> | null } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -457,6 +463,15 @@ export const RegisterDocument = gql`
 
 export function useRegisterMutation() {
   return Urql.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument);
+};
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const GetUserTicketsDocument = gql`
     query GetUserTickets {

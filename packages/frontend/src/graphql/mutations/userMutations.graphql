@@ -29,3 +29,7 @@ mutation Register($options: UserRegInput!) {
     }
   }
 }
+
+mutation Logout {
+  logout
+}

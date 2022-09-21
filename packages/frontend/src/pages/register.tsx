@@ -8,8 +8,6 @@ import AnimatedDiv from '../components/animatedDiv'
 import { useRegisterMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
-import { setUser } from '../features/auth/authSlice'
-import { useAppDispatch } from '../app/hooks'
 
 const Register = () => {
     const username = useRef<HTMLInputElement>(null)
@@ -19,7 +17,6 @@ const Register = () => {
     const [{ fetching }, register] = useRegisterMutation()
 
     const navigate = useNavigate()
-    const dispatch = useAppDispatch()
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -48,7 +45,6 @@ const Register = () => {
             //naviagte on success
             if (res.data?.register.user) {
                 toast.success('Account created')
-                dispatch(setUser(res.data?.register.user))
                 navigate(RouteURLs.Home)
             }
         } catch (error: any) {

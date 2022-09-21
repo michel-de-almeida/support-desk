@@ -9,10 +9,11 @@ import connectRedis from 'connect-redis'
 import session from 'express-session'
 import Redis from 'ioredis'
 import { buildSchema } from 'type-graphql'
-import { IAppContext } from './interfaces'
+import { AppContext } from './interfaces'
 import { TicketResolver } from './resolvers/ticketResolver'
 import { UserResolver } from './resolvers/userResolver'
 import { customAuthChecker } from './middleware/authChecker'
+import { __prod__ } from './constants'
 
 declare global {
     namespace Express {
@@ -39,7 +40,7 @@ declare global {
             cookie: {
                 maxAge: 1000 * 60 * 60 * 24, // 24 hours
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'prod', // cookie only works in https
+                secure: __prod__, // cookie only works in https
                 sameSite: 'lax', //csrf
             },
             saveUninitialized: false,
@@ -53,7 +54,7 @@ declare global {
             resolvers: [UserResolver, TicketResolver],
             authChecker: customAuthChecker,
         }),
-        context: ({ req, res }): IAppContext => ({ req, res }),
+        context: ({ req, res }): AppContext => ({ req, res }),
         csrfPrevention: true,
         cache: 'bounded',
         plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
@@ -69,7 +70,7 @@ declare global {
     })
     //app.use(errorHandler)
 
-    if (process.env.NODE_ENV === 'prod') {
+    if (process.env.NODE_ENV === 'production') {
         app.use(express.static(path.join(__dirname, '../../frontend/build')))
 
         app.get('*', (_req, res) => {

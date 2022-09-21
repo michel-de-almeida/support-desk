@@ -15,19 +15,18 @@ import { FormEvent, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { TicketType } from 'support-desk-shared'
-import { useAppSelector } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { TicketService } from '../features/tickets/ticketService'
+import { useSetTicketMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
+import { toErrorMap } from '../utils/utils'
 
 const NewTicket = () => {
     const [product, setProduct] = useState('')
     const description = useRef<HTMLInputElement>(null)
-    const [isLoading, setisLoading] = useState(false)
+    const [{ fetching }, setTicket] = useSetTicketMutation()
     const ticketTypeArray = Object.values(TicketType)
 
     const navigate = useNavigate()
-    const user = useAppSelector((state) => state.auth.user)
 
     const handleSelectChange = (event: SelectChangeEvent) => {
         setProduct(event.target.value)
@@ -36,22 +35,25 @@ const NewTicket = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        setisLoading(true)
-
-        const res = await TicketService.setTicket({
-            userId: user._id!,
-            product: product,
-            description: description.current?.value!,
-        })
-
-        if (res.success) {
-            toast.success(res.message)
-            navigate(RouteURLs.Home)
-        } else {
-            toast.error(res.message)
+        try {
+            const res = await setTicket({
+                ticket: {
+                    product: product as TicketType,
+                    description: description.current?.value!,
+                },
+            })
+            if (res.error) toast.error(res.error.message)
+            //custom error
+            if (res.data?.setTicket.errors)
+                toast.error(toErrorMap(res.data?.setTicket.errors).toString())
+            //naviagte on success
+            if (res.data?.setTicket.ticket) {
+                toast.success('Ticket created')
+                navigate(RouteURLs.Home)
+            }
+        } catch (error: any) {
+            toast.error(error as string)
         }
-
-        setisLoading(false)
     }
 
     return (
@@ -132,7 +134,7 @@ const NewTicket = () => {
                         variant='contained'
                         size='large'
                         sx={{ mt: 3, mb: 2 }}
-                        loading={isLoading}
+                        loading={fetching}
                     >
                         Submit Ticket
                     </LoadingButton>

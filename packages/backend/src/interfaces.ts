@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-export interface IAppContext {
+export interface AppContext {
     req: Request
     res: Response
 }

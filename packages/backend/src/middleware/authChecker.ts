@@ -1,9 +1,9 @@
 import { UserModel } from '../entities/userEntity'
 import { ResolverData, AuthChecker } from 'type-graphql'
-import { IAppContext } from '../interfaces'
+import { AppContext } from '../interfaces'
 
-export const customAuthChecker: AuthChecker<IAppContext> = async (
-    { context }: ResolverData<IAppContext>,
+export const customAuthChecker: AuthChecker<AppContext> = async (
+    { context }: ResolverData<AppContext>,
     roles
 ) => {
     if (roles.length === 0) {

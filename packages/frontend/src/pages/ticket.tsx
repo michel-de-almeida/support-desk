@@ -1,15 +1,17 @@
 import { Add as AddIcon } from '@mui/icons-material'
 import { Button, Card, Divider, List, Stack, Typography } from '@mui/material'
 import { useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import NoteItem from '../components/noteItem'
 import ConfirmPopup from '../components/Popups/confirmPopup'
 import FormPopup from '../components/Popups/formPopup'
 import StatusChip from '../components/statusChip'
 import {
+    Role,
     TicketStatus,
     useGetTicketQuery,
+    useMeQuery,
     useSetTicketNoteMutation,
     useUpdateTicketMutation,
 } from '../generated/graphql'
@@ -18,17 +20,36 @@ import { toErrorMap } from '../utils/utils'
 
 interface Props {}
 const Ticket = (props: Props) => {
+    //route
     const { ticketId } = useParams()
-    const [{ data, error, fetching }] = useGetTicketQuery({ variables: { ticketId: ticketId! } })
-    const [, setTicketNote] = useSetTicketNoteMutation()
-    const ticket = data?.getTicket.ticket
-    const [, updateTicket] = useUpdateTicketMutation()
 
+    //graphQL hooks
+    const [, setTicketNote] = useSetTicketNoteMutation()
+    const [, updateTicket] = useUpdateTicketMutation()
+    const [{ data: ticketData, error, fetching: isTicketFetching }] = useGetTicketQuery({
+        variables: { ticketId: ticketId! },
+    })
+    const [{ data: meData, fetching: isMeFetching }] = useMeQuery()
+
+    //inputs
     const note = useRef<HTMLInputElement>(null)
 
-    if (!fetching) {
+    //router
+    const navigate = useNavigate()
+
+    const ticket = ticketData?.getTicket.ticket
+
+    if (!isTicketFetching && !isMeFetching) {
         if (error) toast.error(error.message)
-        if (data?.getTicket.errors) toast.error(toErrorMap(data?.getTicket.errors).toString())
+        if (ticketData?.getTicket.errors)
+            toast.error(toErrorMap(ticketData?.getTicket.errors).toString())
+        if (
+            ticketData?.getTicket.ticket?.userDoc._id !== meData?.me._id ||
+            meData?.me.roles.includes(Role.Admin)
+        ) {
+            toast.error('Invalid permissions to view this screen')
+            navigate(-1)
+        }
     }
 
     //Note popup
@@ -64,7 +85,7 @@ const Ticket = (props: Props) => {
     const handleCloseTicket = async () => {
         try {
             const res = await updateTicket({
-                ticket: { id: data?.getTicket.ticket?._id!, status: TicketStatus.Closed },
+                ticket: { id: ticketData?.getTicket.ticket?._id!, status: TicketStatus.Closed },
             })
 
             //server error
@@ -84,7 +105,7 @@ const Ticket = (props: Props) => {
     }
 
     return (
-        <BasePageLayout isPageLoading={fetching}>
+        <BasePageLayout isPageLoading={isTicketFetching && isMeFetching}>
             <Card
                 sx={{
                     marginTop: 8,

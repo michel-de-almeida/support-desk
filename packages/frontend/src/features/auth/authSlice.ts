@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AuthService } from './authService'
 import { User } from '../../generated/graphql'
 
 const emptyUser: User = {
@@ -21,7 +20,6 @@ const authSlice = createSlice({
             state.user = action.payload
         },
         logout: (state) => {
-            AuthService.logout()
             state.user = emptyUser
         },
     },

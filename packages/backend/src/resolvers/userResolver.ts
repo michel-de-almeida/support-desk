@@ -2,14 +2,15 @@ import { Arg, Mutation, Resolver, Ctx, Query, Authorized } from 'type-graphql'
 import { UserLoginInput, UserRegInput, UserResponse } from './types/user-IO'
 import { Role, User, UserModel } from '../entities/userEntity'
 import argon2 from 'argon2'
-import { IAppContext } from '../interfaces'
+import { AppContext } from '../interfaces'
+import { COOKIE_NAME } from '../constants'
 
 @Resolver()
 export class UserResolver {
     @Mutation(() => UserResponse, { description: 'Creates a new User' })
     async register(
         @Arg('options') options: UserRegInput,
-        @Ctx() { req }: IAppContext
+        @Ctx() { req }: AppContext
     ): Promise<UserResponse> {
         // Find if user already exists and return an error if it does
         const userExists = await UserModel.findOne({ email: options.email })
@@ -44,7 +45,7 @@ export class UserResolver {
     @Mutation(() => UserResponse, { description: 'Signs a user in' })
     async login(
         @Arg('options') options: UserLoginInput,
-        @Ctx() { req }: IAppContext
+        @Ctx() { req }: AppContext
     ): Promise<UserResponse> {
         // Find the user
         const user = await UserModel.findOne({ email: options.email })
@@ -75,7 +76,7 @@ export class UserResolver {
 
     @Authorized()
     @Query(() => User, { description: 'Returns the currently logged user' })
-    async me(@Ctx() { req }: IAppContext): Promise<User> {
+    async me(@Ctx() { req }: AppContext): Promise<User> {
         const user = await UserModel.findById(req.session.userId)
 
         return user!
@@ -83,9 +84,25 @@ export class UserResolver {
 
     @Authorized()
     @Query(() => [Role], { description: 'Returns the roles assigned to the currently logged user' })
-    async getUserRoles(@Ctx() { req }: IAppContext): Promise<Role[]> {
+    async getUserRoles(@Ctx() { req }: AppContext): Promise<Role[]> {
         const user = await UserModel.findById(req.session.userId, { roles: 1, _id: 0 })
 
         return user?.roles!
+    }
+
+    @Mutation(() => Boolean)
+    logout(@Ctx() { req, res }: AppContext) {
+        return new Promise((resolve) =>
+            req.session.destroy((err) => {
+                res.clearCookie(COOKIE_NAME)
+                if (err) {
+                    console.log(err)
+                    resolve(false)
+                    return
+                }
+
+                resolve(true)
+            })
+        )
     }
 }
