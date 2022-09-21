@@ -66,7 +66,7 @@ const Header = (props: Props) => {
                         direction={'row'}
                         spacing={1.5}
                     >
-                        {authState.user.id ? (
+                        {authState.user._id ? (
                             <Button
                                 onClick={handleLogout}
                                 variant='outlined'

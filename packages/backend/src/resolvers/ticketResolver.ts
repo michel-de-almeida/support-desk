@@ -10,50 +10,43 @@ export class TicketResolver {
     @Query(() => TicketsResponse, {
         description: 'Returns the tickets that the currently logged user has submitted',
     })
-    async userTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
+    async getUserTickets(@Ctx() { req }: IAppContext): Promise<TicketsResponse> {
         const tickets = await TicketModel.find({ 'userDoc._id': req.session.userId })
 
-        if (!tickets) {
-            return {
-                success: false,
-                errors: [{ message: 'An error occured while attempting to fetch tickets' }],
-            }
-        }
-        return { success: true, tickets: tickets }
+        if (!tickets) throw Error('An error occured while attempting to fetch tickets')
+
+        return { tickets: tickets }
     }
 
     @Authorized(Role.Admin)
     @Query(() => TicketsResponse, {
         description: 'Returns all tickets in the collection. Admin only',
     })
-    async tickets(): Promise<TicketsResponse> {
+    async getTickets(): Promise<TicketsResponse> {
         const tickets = await TicketModel.find()
 
-        if (!tickets) {
-            return {
-                success: false,
-                errors: [{ message: 'An error occured while attempting to fetch tickets' }],
-            }
-        }
-        return { success: true, tickets: tickets }
+        if (!tickets) throw Error('An error occured while attempting to fetch tickets')
+
+        return { tickets: tickets }
     }
 
     @Authorized()
     @Query(() => TicketResponse, { description: 'Returns the Ticket with the given Id' })
-    async ticket(@Arg('ticketId') id: string): Promise<TicketResponse> {
+    async getTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
-                success: false,
                 errors: [{ field: 'ticketId', message: 'Please provide a ticket id' }],
             }
         }
         const ticket = await TicketModel.findById(id)
 
         if (!ticket) {
-            return { success: false, errors: [{ message: 'Ticket not found' }] }
+            return {
+                errors: [{ field: 'Id', message: 'Ticket with the given Id was not found' }],
+            }
         }
 
-        return { success: true, ticket: ticket }
+        return { ticket: ticket }
     }
 
     @Authorized()
@@ -62,13 +55,17 @@ export class TicketResolver {
         @Arg('ticket') options: CreateTicket,
         @Ctx() { req }: IAppContext
     ): Promise<TicketResponse> {
+        const response = {} as TicketResponse
         if (!options.product) {
-            return { success: false, errors: [{ message: 'Please provide a product' }] }
+            response.errors?.push({ field: 'product', message: 'Please provide a product' })
         }
 
         if (!options.description) {
-            return { success: false, errors: [{ message: 'Please provide a description' }] }
+            response.errors?.push({ field: 'description', message: 'Please provide a description' })
+            //return { success: false, errors: [{field:'description', message: 'Please provide a description' }] }
         }
+
+        if (response.errors) return response
 
         const user = await UserModel.findById(req.session.userId)
         const ticket: Ticket = {
@@ -77,14 +74,9 @@ export class TicketResolver {
         }
         const newTicket = await TicketModel.create(ticket)
 
-        if (!newTicket) {
-            return {
-                success: false,
-                errors: [{ message: 'An error occured while attempting to create a ticket' }],
-            }
-        }
+        if (!newTicket) throw Error('An error occured while attempting to create a ticket')
 
-        return { success: true, ticket: newTicket }
+        return { ticket: newTicket }
     }
 
     @Authorized()
@@ -102,42 +94,32 @@ export class TicketResolver {
             { new: true }
         )
 
-        if (!ticket) {
-            return {
-                success: false,
-                errors: [{ message: 'An error occured while attempting to add a note' }],
-            }
-        }
+        if (!ticket) throw Error('An error occured while attempting to add a note')
 
-        return { success: true, ticket: ticket }
+        return { ticket: ticket }
     }
 
     @Authorized()
     @Mutation(() => TicketResponse, { description: 'Updates a ticket' })
     async updateTicket(@Arg('ticket') options: UpdateTicket): Promise<TicketResponse> {
         if (!options.id) {
-            return { success: false, errors: [{ message: 'Please provide the ticketId' }] }
+            return {
+                errors: [{ field: 'id', message: 'Please provide the ticketId' }],
+            }
         }
 
         const ticketExists = await TicketModel.findById(options.id)
 
-        if (!ticketExists) {
-            return { success: false, errors: [{ message: 'Ticket not found' }] }
-        }
+        if (!ticketExists) throw Error('Ticket not found')
 
         const updatedTicket = await TicketModel.findByIdAndUpdate(options.id, options, {
             new: true,
             runValidators: true,
         })
 
-        if (!updatedTicket) {
-            return {
-                success: false,
-                errors: [{ message: 'An error occured while attempting to update the ticket' }],
-            }
-        }
+        if (!updatedTicket) throw Error('An error occured while attempting to update the ticket')
 
-        return { success: true, ticket: updatedTicket }
+        return { ticket: updatedTicket }
     }
 
     @Authorized()
@@ -145,16 +127,13 @@ export class TicketResolver {
     async deleteTicket(@Arg('ticketId') id: string): Promise<TicketResponse> {
         if (!id) {
             return {
-                success: false,
                 errors: [{ field: 'ticketId', message: 'Please provide a ticket id' }],
             }
         }
         const ticket = await TicketModel.findByIdAndDelete(id)
 
-        if (!ticket) {
-            return { success: false, errors: [{ message: 'Ticket not found' }] }
-        }
+        if (!ticket) throw Error('Ticket not found')
 
-        return { success: true }
+        return {}
     }
 }

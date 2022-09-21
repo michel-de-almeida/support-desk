@@ -1,0 +1,101 @@
+mutation SetTicket($ticket: CreateTicket!) {
+  setTicket(ticket: $ticket) {
+    ticket {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+
+mutation UpdateTicket($ticket: UpdateTicket!) {
+  updateTicket(ticket: $ticket) {
+    ticket {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+
+mutation DeleteTicket($ticketId: String!) {
+  deleteTicket(ticketId: $ticketId) {
+    ticket {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

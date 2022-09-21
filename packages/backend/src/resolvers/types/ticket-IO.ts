@@ -28,9 +28,6 @@ export class UpdateTicket implements Partial<Ticket> {
 
 @ObjectType()
 export class TicketResponse {
-    @Field()
-    success!: boolean
-
     @Field(() => Ticket, { nullable: true })
     ticket?: Ticket
 
@@ -40,9 +37,6 @@ export class TicketResponse {
 
 @ObjectType()
 export class TicketsResponse {
-    @Field()
-    success!: boolean
-
     @Field(() => [Ticket], { nullable: true })
     tickets?: Ticket[]
 

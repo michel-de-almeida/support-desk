@@ -11,46 +11,30 @@ import FormPopup from '../components/Popups/formPopup'
 import StatusChip from '../components/statusChip'
 import { NoteService } from '../features/notes/noteService'
 import { TicketService } from '../features/tickets/ticketService'
+import { Role, useGetTicketQuery } from '../generated/graphql'
 import BasePageLayout from '../layouts/basePageLayout'
+import { toErrorMap } from '../utils/utils'
 
 interface Props {}
 const Ticket = (props: Props) => {
-    const { token, id, isAdmin } = useAppSelector((state) => state.auth.user)
+    const { token, _id, roles } = useAppSelector((state) => state.auth.user)
     const navigate = useNavigate()
-    const emptyTicket: ITicket = {
-        userId: '',
-        product: '',
-        description: '',
-    }
+    const { ticketId } = useParams()
+    const [{ data, error, fetching }] = useGetTicketQuery({ variables: { ticketId: ticketId! } })
+    const ticket = data?.getTicket.ticket
+
     const emptyNoteList: INote[] = []
 
-    const { ticketId } = useParams()
-    const [ticket, setTicket] = useState(emptyTicket)
     const note = useRef<HTMLInputElement>(null)
-    const [noteList, setnoteList] = useState(emptyNoteList)
-    const [isPageLoading, setisPageLoading] = useState(true)
 
-    useEffect(() => {
-        ;(async () => {
-            const getTicketRes = await TicketService.getTicket(ticketId!)
-            const ticket = getTicketRes.payload as ITicket
-            const noteList = await NoteService.getNotesByTicketId(ticketId!)
-            setisPageLoading(false)
-
-            //Only the user that submitted the ticket or an admin can view the ticket
-            if (ticket.userId === id || isAdmin) {
-                if (getTicketRes.success) {
-                    setTicket(ticket)
-                    if (noteList.success) {
-                        setnoteList(noteList.payload)
-                    } else toast.error(noteList.message)
-                } else toast.error(getTicketRes.message)
-            } else {
-                toast.error('Invalid permissions to view this ticket')
-                navigate(-1)
-            }
-        })()
-    }, [token, id, isAdmin, ticketId, navigate])
+    if (!fetching) {
+        if (error) toast.error(error.message)
+        if (data?.getTicket.errors) toast.error(toErrorMap(data?.getTicket.errors).toString())
+        if (ticket?.userDoc._id !== _id || !roles.includes(Role.Admin)) {
+            toast.error('Invalid permissions to view this ticket')
+            navigate(-1)
+        }
+    }
 
     //Note popup
     const [showNotePopup, setshowNotePopup] = useState(false)
@@ -73,7 +57,7 @@ const Ticket = (props: Props) => {
     }
 
     const handleConfirmSave = async () => {
-        ticket.status = TicketStatus.Closed
+        ticket?.status = TicketStatus.Closed
         const updatedTicketRes = await TicketService.updateTicket(ticket)
         if (updatedTicketRes.success) {
             toast.success('Ticket Closed')
@@ -82,7 +66,7 @@ const Ticket = (props: Props) => {
     }
 
     return (
-        <BasePageLayout isPageLoading={isPageLoading}>
+        <BasePageLayout isPageLoading={fetching}>
             <Card
                 sx={{
                     marginTop: 8,
@@ -101,17 +85,17 @@ const Ticket = (props: Props) => {
                     >
                         Ticket Details
                     </Typography>
-                    <StatusChip status={ticket.status} />
+                    <StatusChip status={ticket?.status} />
                 </Stack>
                 <Stack
                     spacing={1}
                     mt={3}
                 >
-                    <Typography variant='h6'>TicketID: {ticket._id}</Typography>
+                    <Typography variant='h6'>TicketID: {ticket?._id}</Typography>
                     <Typography variant='h6'>
-                        Date Submitted: {new Date(ticket.createdAt!).toLocaleString('en-ZA')}
+                        Date Submitted: {new Date(ticket?.createdAt!).toLocaleString('en-ZA')}
                     </Typography>
-                    <Typography variant='h6'>Product: {ticket.product}</Typography>
+                    <Typography variant='h6'>Product: {ticket?.product}</Typography>
                     <Divider />
                     <Card sx={{ padding: 1.5 }}>
                         <Typography variant='h6'>Description of the issue </Typography>
@@ -119,7 +103,7 @@ const Ticket = (props: Props) => {
                             variant='body2'
                             mt={1}
                         >
-                            {ticket.description}
+                            {ticket?.description}
                         </Typography>
                     </Card>
                 </Stack>
@@ -138,7 +122,7 @@ const Ticket = (props: Props) => {
                     >
                         Notes
                     </Typography>
-                    {ticket.status !== TicketStatus.Closed ? (
+                    {ticket?.status !== TicketStatus.Closed ? (
                         <div>
                             <Button
                                 variant='contained'
@@ -149,13 +133,13 @@ const Ticket = (props: Props) => {
                             </Button>
                         </div>
                     ) : null}
-                    {noteList.length > 0 ? (
+                    {ticket?.notes?.length! > 0 ? (
                         <List>
-                            {noteList.map((v) => {
+                            {ticket?.notes!.map((v) => {
                                 return (
                                     <NoteItem
-                                        key={v._id}
-                                        note={v}
+                                        key={}
+                                        note={}
                                     ></NoteItem>
                                 )
                             })}

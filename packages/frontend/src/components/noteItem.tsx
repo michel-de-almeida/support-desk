@@ -1,8 +1,8 @@
 import { Card, Stack, Typography } from '@mui/material'
-import { INote } from 'support-desk-shared'
+import { Note } from '../generated/graphql'
 
 interface Props {
-    note: INote
+    note: Note
 }
 const NoteItem = ({ note }: Props) => {
     return (

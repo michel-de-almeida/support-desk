@@ -7,7 +7,7 @@ interface Props {
 const PrivateRoute = ({ children }: Props) => {
     const { user } = useAppSelector((state) => state.auth)
 
-    if (user.id) return children
+    if (user._id) return children
 
     return <Navigate to='/login' />
 }

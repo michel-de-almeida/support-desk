@@ -1,21 +1,22 @@
 import { Person as PersonIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Avatar, Box, Container, Grid, Link, TextField, Typography } from '@mui/material'
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { register } from '../features/auth/authSlice'
+import { useRegisterMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
+import { toErrorMap } from '../utils/utils'
+import { setUser } from '../features/auth/authSlice'
+import { useAppDispatch } from '../app/hooks'
 
 const Register = () => {
     const username = useRef<HTMLInputElement>(null)
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
     const repeatPassword = useRef<HTMLInputElement>(null)
-
-    const [isLoading, setisLoading] = useState(false)
+    const [{ fetching }, register] = useRegisterMutation()
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -28,22 +29,32 @@ const Register = () => {
             return
         }
 
-        setisLoading(true)
-        const res = await dispatch(
-            register({
-                email: email.current?.value!,
-                repeatPassword: repeatPassword.current?.value!,
-                password: password.current?.value!,
-                username: username.current?.value!,
-                isAdmin: false,
+        try {
+            const res = await register({
+                options: {
+                    email: email.current?.value!,
+                    password: password.current?.value!,
+                    username: username.current?.value!,
+                },
             })
-        )
-        setisLoading(false)
-
-        if (res.meta.requestStatus === 'fulfilled') {
-            toast.success('Account created')
-            navigate(RouteURLs.Home)
-        } else toast.error(res.payload as string)
+            //server error
+            if (res.error) {
+                toast.error(res.error.message)
+                return
+            }
+            //custom error
+            if (res.data?.register.errors)
+                toast.error(toErrorMap(res.data?.register.errors).toString())
+            //naviagte on success
+            if (res.data?.register.user) {
+                toast.success('Account created')
+                dispatch(setUser(res.data?.register.user))
+                navigate(RouteURLs.Home)
+            }
+        } catch (error: any) {
+            toast.error(error as string)
+            return
+        }
     }
 
     return (
@@ -117,7 +128,7 @@ const Register = () => {
                             variant='contained'
                             size='large'
                             sx={{ mt: 2, mb: 2 }}
-                            loading={isLoading}
+                            loading={fetching}
                         >
                             Sign Up
                         </LoadingButton>

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { ITicket, API_URLS, IResponseData } from 'support-desk-shared'
-import { extractErrorMessage } from '../../helpers/utils'
+import { extractErrorMessage } from '../../utils/utils'
 
 //Auth header is attached in the AxiosMiddleware component
 

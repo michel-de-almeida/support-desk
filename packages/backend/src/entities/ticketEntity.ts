@@ -53,6 +53,12 @@ export class Ticket {
     @Field(() => [Note], { nullable: true })
     @prop({ type: () => [Note] })
     public notes?: Note[]
+
+    @Field({ nullable: true })
+    public createdAt?: Date
+
+    @Field({ nullable: true })
+    public updatedAt?: Date
 }
 
 export const TicketModel = getModelForClass(Ticket, { schemaOptions: { timestamps: true } })

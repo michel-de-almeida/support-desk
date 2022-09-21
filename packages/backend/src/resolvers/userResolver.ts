@@ -34,13 +34,7 @@ export class UserResolver {
 
         const newUser = await UserModel.create(user)
 
-        if (!newUser) {
-            return {
-                errors: [
-                    { message: 'An error occoured while creating your account. Please try again' },
-                ],
-            }
-        }
+        if (!newUser) throw Error('An error occoured while creating your account. Please try again')
 
         req.session.userId = newUser.id
 

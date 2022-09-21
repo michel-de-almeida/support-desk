@@ -1,38 +1,32 @@
 import { Container, Link, Typography } from '@mui/material'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { ITicket, TicketStatus } from 'support-desk-shared'
-import { useAppSelector } from '../app/hooks'
 import StatusChip from '../components/statusChip'
-import { TicketService } from '../features/tickets/ticketService'
+import { useGetUserTicketsQuery, Ticket, TicketStatus } from '../generated/graphql'
 import BasePageLayout from '../layouts/basePageLayout'
 import { RouteURLs } from '../static/enums'
+import { toErrorMap } from '../utils/utils'
 
 const Tickets = () => {
-    const emptyTicketList: ITicket[] = []
-    const token = useAppSelector((state) => state.auth.user.token)
-    const [ticketList, setTicketList] = useState(emptyTicketList)
-    const [isPageLoading, setisPageLoading] = useState(true)
+    const [{ data, error, fetching }] = useGetUserTicketsQuery()
+    let ticketList: Ticket[] = []
+
+    if (!fetching) {
+        if (error) toast.error(error.message)
+        if (data?.getUserTickets.errors)
+            toast.error(toErrorMap(data?.getUserTickets.errors).toString())
+
+        if (data?.getUserTickets.tickets) {
+            ticketList = data?.getUserTickets.tickets as Ticket[]
+            ticketList.map((v) => {
+                v.createdAt = new Date(v.createdAt!).toLocaleString()
+                return v
+            })
+        }
+    }
 
     const naviagte = useNavigate()
-
-    useEffect(() => {
-        ;(async () => {
-            const res = await TicketService.getUserTickets(token)
-            const tickets = res.payload as ITicket[]
-
-            if (res.success) {
-                tickets.map((v) => {
-                    v.createdAt = new Date(v.createdAt!).toLocaleString()
-                    return v
-                })
-                setTicketList(tickets)
-            } else toast.error(res.message)
-            setisPageLoading(false)
-        })()
-    }, [token])
 
     const columns: GridColDef[] = [
         {
@@ -74,7 +68,7 @@ const Tickets = () => {
     ]
 
     return (
-        <BasePageLayout isPageLoading={isPageLoading}>
+        <BasePageLayout isPageLoading={fetching}>
             <Container sx={{ height: 400, marginTop: 8 }}>
                 <Typography
                     variant='h4'

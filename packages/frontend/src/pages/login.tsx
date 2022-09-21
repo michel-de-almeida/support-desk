@@ -11,19 +11,21 @@ import {
     TextField,
     Typography,
 } from '@mui/material'
-import { FormEvent, useRef, useState } from 'react'
+import { FormEvent, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { login } from '../features/auth/authSlice'
+import { useLoginMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
+import { toErrorMap } from '../utils/utils'
+import { setUser } from '../features/auth/authSlice'
 
 const Login = () => {
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
-    const [isLoading, setisLoading] = useState(false)
     const isPersist = useRef<HTMLInputElement>(null)
+    const [{ fetching }, login] = useLoginMutation()
 
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
@@ -31,22 +33,22 @@ const Login = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        setisLoading(true)
-        const res = await dispatch(
-            login({
-                user: {
-                    email: email.current?.value!,
-                    password: password.current?.value!,
-                },
-                isPersist: isPersist.current?.checked!,
+        try {
+            const res = await login({
+                options: { email: email.current?.value!, password: password.current?.value! },
             })
-        )
-
-        setisLoading(false)
-
-        if (res.meta.requestStatus === 'fulfilled') {
-            navigate(RouteURLs.Home)
-        } else toast.error(res.payload as string)
+            //server error
+            if (res.error) toast.error(res.error.message)
+            //custom error
+            if (res.data?.login.errors) toast.error(toErrorMap(res.data?.login.errors).toString())
+            //naviagte on success
+            if (res.data?.login.user) {
+                dispatch(setUser(res.data?.login.user))
+                navigate(RouteURLs.Home)
+            }
+        } catch (error: any) {
+            toast.error(error as string)
+        }
     }
 
     return (
@@ -116,7 +118,7 @@ const Login = () => {
                             variant='contained'
                             size='large'
                             sx={{ mt: 3, mb: 2 }}
-                            loading={isLoading}
+                            loading={fetching}
                         >
                             Sign In
                         </LoadingButton>

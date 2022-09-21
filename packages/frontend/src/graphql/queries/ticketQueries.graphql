@@ -1,0 +1,101 @@
+query GetUserTickets {
+  getUserTickets {
+    tickets {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+
+query GetTickets {
+  getTickets {
+    tickets {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
+
+query GetTicket($ticketId: String!) {
+  getTicket(ticketId: $ticketId) {
+    ticket {
+      _id
+      userDoc {
+        _id
+        username
+        email
+        roles
+        token
+      }
+      product
+      description
+      status
+      notes {
+        noteText
+        createdBy {
+          _id
+          username
+          email
+          roles
+          token
+        }
+      }
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}
