@@ -3,6 +3,7 @@ import { Button, Card, Divider, List, Stack, Typography } from '@mui/material'
 import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useAppSelector } from '../app/hooks'
 import NoteItem from '../components/noteItem'
 import ConfirmPopup from '../components/Popups/confirmPopup'
 import FormPopup from '../components/Popups/formPopup'
@@ -11,7 +12,6 @@ import {
     Role,
     TicketStatus,
     useGetTicketQuery,
-    useMeQuery,
     useSetTicketNoteMutation,
     useUpdateTicketMutation,
 } from '../generated/graphql'
@@ -29,7 +29,6 @@ const Ticket = (props: Props) => {
     const [{ data: ticketData, error, fetching: isTicketFetching }] = useGetTicketQuery({
         variables: { ticketId: ticketId! },
     })
-    const [{ data: meData, fetching: isMeFetching }] = useMeQuery()
 
     //inputs
     const note = useRef<HTMLInputElement>(null)
@@ -37,16 +36,17 @@ const Ticket = (props: Props) => {
     //router
     const navigate = useNavigate()
 
-    const ticket = ticketData?.getTicket.ticket
+    //redux
+    const { user } = useAppSelector((state) => state.auth)
 
-    if (!isTicketFetching && !isMeFetching) {
+    if (!isTicketFetching) {
         if (error) toast.error(error.message)
         if (ticketData?.getTicket.errors)
             toast.error(toErrorMap(ticketData?.getTicket.errors).toString())
-        if (
-            ticketData?.getTicket.ticket?.userDoc._id !== meData?.me._id ||
-            meData?.me.roles.includes(Role.Admin)
-        ) {
+        // console.log('userdoc', ticketData?.getTicket.ticket?.userDoc._id)
+        // console.log('userId', user?._id)
+
+        if (ticketData?.getTicket.ticket?.userDoc._id !== user?._id) {
             toast.error('Invalid permissions to view this screen')
             navigate(-1)
         }
@@ -105,7 +105,7 @@ const Ticket = (props: Props) => {
     }
 
     return (
-        <BasePageLayout isPageLoading={isTicketFetching && isMeFetching}>
+        <BasePageLayout isPageLoading={isTicketFetching}>
             <Card
                 sx={{
                     marginTop: 8,
@@ -124,17 +124,22 @@ const Ticket = (props: Props) => {
                     >
                         Ticket Details
                     </Typography>
-                    <StatusChip status={ticket?.status} />
+                    <StatusChip status={ticketData?.getTicket.ticket?.status} />
                 </Stack>
                 <Stack
                     spacing={1}
                     mt={3}
                 >
-                    <Typography variant='h6'>TicketID: {ticket?._id}</Typography>
                     <Typography variant='h6'>
-                        Date Submitted: {new Date(ticket?.createdAt!).toLocaleString('en-ZA')}
+                        TicketID: {ticketData?.getTicket.ticket?._id}
                     </Typography>
-                    <Typography variant='h6'>Product: {ticket?.product}</Typography>
+                    <Typography variant='h6'>
+                        Date Submitted:{' '}
+                        {new Date(ticketData?.getTicket.ticket?.createdAt!).toLocaleString('en-ZA')}
+                    </Typography>
+                    <Typography variant='h6'>
+                        Product: {ticketData?.getTicket.ticket?.product}
+                    </Typography>
                     <Divider />
                     <Card sx={{ padding: 1.5 }}>
                         <Typography variant='h6'>Description of the issue </Typography>
@@ -142,7 +147,7 @@ const Ticket = (props: Props) => {
                             variant='body2'
                             mt={1}
                         >
-                            {ticket?.description}
+                            {ticketData?.getTicket.ticket?.description}
                         </Typography>
                     </Card>
                 </Stack>
@@ -161,7 +166,7 @@ const Ticket = (props: Props) => {
                     >
                         Notes
                     </Typography>
-                    {ticket?.status !== TicketStatus.Closed ? (
+                    {ticketData?.getTicket.ticket?.status !== TicketStatus.Closed ? (
                         <div>
                             <Button
                                 variant='contained'
@@ -172,9 +177,9 @@ const Ticket = (props: Props) => {
                             </Button>
                         </div>
                     ) : null}
-                    {ticket?.notes?.length! > 0 ? (
+                    {ticketData?.getTicket.ticket?.notes?.length! > 0 ? (
                         <List>
-                            {ticket?.notes!.map((note) => {
+                            {ticketData?.getTicket.ticket?.notes!.map((note) => {
                                 return (
                                     <NoteItem
                                         key={note._id}
@@ -195,7 +200,7 @@ const Ticket = (props: Props) => {
                     )}
                 </Stack>
             </Card>
-            {ticket?.status !== TicketStatus.Closed ? (
+            {ticketData?.getTicket.ticket?.status !== TicketStatus.Closed ? (
                 <Button
                     variant='contained'
                     color='error'
