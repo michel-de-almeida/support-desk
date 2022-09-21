@@ -1,73 +1,116 @@
 mutation SetTicket($ticket: CreateTicket!) {
-  setTicket(ticket: $ticket) {
-    ticket {
-      _id
-      userDoc {
-        _id
-        username
-        email
-        roles
-        token
-      }
-      product
-      description
-      status
-      notes {
-        noteText
-        createdBy {
-          _id
-          username
-          email
-          roles
-          token
+    setTicket(ticket: $ticket) {
+        ticket {
+            _id
+            userDoc {
+                _id
+                username
+                email
+                roles
+                token
+            }
+            product
+            description
+            status
+            notes {
+                _id
+                noteText
+                createdBy {
+                    _id
+                    username
+                    email
+                    roles
+                    token
+                }
+                createdAt
+                updatedAt
+            }
+            createdAt
+            updatedAt
         }
-      }
-      createdAt
-      updatedAt
+        errors {
+            field
+            message
+        }
     }
-    errors {
-      field
-      message
-    }
-  }
 }
 
 mutation UpdateTicket($ticket: UpdateTicket!) {
-  updateTicket(ticket: $ticket) {
-    ticket {
-      _id
-      userDoc {
-        _id
-        username
-        email
-        roles
-        token
-      }
-      product
-      description
-      status
-      notes {
-        noteText
-        createdBy {
-          _id
-          username
-          email
-          roles
-          token
+    updateTicket(ticket: $ticket) {
+        ticket {
+            _id
+            userDoc {
+                _id
+                username
+                email
+                roles
+                token
+            }
+            product
+            description
+            status
+            notes {
+                _id
+                noteText
+                createdBy {
+                    _id
+                    username
+                    email
+                    roles
+                    token
+                }
+                createdAt
+                updatedAt
+            }
+            createdAt
+            updatedAt
         }
-      }
-      createdAt
-      updatedAt
+        errors {
+            field
+            message
+        }
     }
-    errors {
-      field
-      message
-    }
-  }
 }
 
 mutation DeleteTicket($ticketId: String!) {
-  deleteTicket(ticketId: $ticketId) {
+    deleteTicket(ticketId: $ticketId) {
+        ticket {
+            _id
+            userDoc {
+                _id
+                username
+                email
+                roles
+                token
+            }
+            product
+            description
+            status
+            notes {
+                _id
+                noteText
+                createdBy {
+                    _id
+                    username
+                    email
+                    roles
+                    token
+                }
+                createdAt
+                updatedAt
+            }
+            createdAt
+            updatedAt
+        }
+        errors {
+            field
+            message
+        }
+    }
+}
+
+mutation SetTicketNote($note: String!, $ticketId: String!) {
+  setTicketNote(note: $note, ticketId: $ticketId) {
     ticket {
       _id
       userDoc {
@@ -81,6 +124,7 @@ mutation DeleteTicket($ticketId: String!) {
       description
       status
       notes {
+        _id
         noteText
         createdBy {
           _id
@@ -89,6 +133,8 @@ mutation DeleteTicket($ticketId: String!) {
           roles
           token
         }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

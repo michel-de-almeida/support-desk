@@ -11,7 +11,7 @@ const NoteItem = ({ note }: Props) => {
             sx={{ padding: 1.5, marginBottom: 0.5 }}
         >
             <Stack spacing={0.2}>
-                <Typography variant='h6'>Note from {note.createdBy_Name}</Typography>
+                <Typography variant='h6'>Note from {note.createdBy.username}</Typography>
                 <Typography
                     variant='body2'
                     mt={1}
@@ -19,7 +19,7 @@ const NoteItem = ({ note }: Props) => {
                     {note.noteText}
                 </Typography>
                 <Typography variant='body2'>
-                    {new Date(note.createdAt!).toLocaleString('en-US')}
+                    {new Date(note.createdAt).toLocaleString('en-US')}
                 </Typography>
             </Stack>
         </Card>

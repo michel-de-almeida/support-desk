@@ -1,39 +1,34 @@
 import { Add as AddIcon } from '@mui/icons-material'
 import { Button, Card, Divider, List, Stack, Typography } from '@mui/material'
-import { useEffect, useRef, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { INote, ITicket, TicketStatus } from 'support-desk-shared'
-import { useAppSelector } from '../app/hooks'
 import NoteItem from '../components/noteItem'
 import ConfirmPopup from '../components/Popups/confirmPopup'
 import FormPopup from '../components/Popups/formPopup'
 import StatusChip from '../components/statusChip'
-import { NoteService } from '../features/notes/noteService'
-import { TicketService } from '../features/tickets/ticketService'
-import { Role, useGetTicketQuery } from '../generated/graphql'
+import {
+    TicketStatus,
+    useGetTicketQuery,
+    useSetTicketNoteMutation,
+    useUpdateTicketMutation,
+} from '../generated/graphql'
 import BasePageLayout from '../layouts/basePageLayout'
 import { toErrorMap } from '../utils/utils'
 
 interface Props {}
 const Ticket = (props: Props) => {
-    const { token, _id, roles } = useAppSelector((state) => state.auth.user)
-    const navigate = useNavigate()
     const { ticketId } = useParams()
     const [{ data, error, fetching }] = useGetTicketQuery({ variables: { ticketId: ticketId! } })
+    const [, setTicketNote] = useSetTicketNoteMutation()
     const ticket = data?.getTicket.ticket
-
-    const emptyNoteList: INote[] = []
+    const [, updateTicket] = useUpdateTicketMutation()
 
     const note = useRef<HTMLInputElement>(null)
 
     if (!fetching) {
         if (error) toast.error(error.message)
         if (data?.getTicket.errors) toast.error(toErrorMap(data?.getTicket.errors).toString())
-        if (ticket?.userDoc._id !== _id || !roles.includes(Role.Admin)) {
-            toast.error('Invalid permissions to view this ticket')
-            navigate(-1)
-        }
     }
 
     //Note popup
@@ -43,10 +38,20 @@ const Ticket = (props: Props) => {
     }
 
     const handleNoteSave = async () => {
-        await NoteService.setNote({ ticketId: ticketId!, noteText: note.current?.value! })
-        const noteListResponse = await NoteService.getNotesByTicketId(ticketId!)
-        setnoteList(noteListResponse.payload)
-        toast.success('Note Added')
+        try {
+            const res = await setTicketNote({ note: note.current?.value!, ticketId: ticketId! })
+            //server error
+            if (res.error) toast.error(res.error.message)
+            //custom error
+            if (res.data?.setTicketNote.errors)
+                toast.error(toErrorMap(res.data?.setTicketNote.errors).toString())
+            //naviagte on success
+            if (res.data?.setTicketNote.ticket) {
+                toast.success('Note added.')
+            }
+        } catch (error: any) {
+            toast.error(error as string)
+        }
         toggleNotePopup()
     }
 
@@ -56,13 +61,26 @@ const Ticket = (props: Props) => {
         setshowConfirmPopup(!showConfirmPopup)
     }
 
-    const handleConfirmSave = async () => {
-        ticket?.status = TicketStatus.Closed
-        const updatedTicketRes = await TicketService.updateTicket(ticket)
-        if (updatedTicketRes.success) {
-            toast.success('Ticket Closed')
-            toggleConfirmPopup()
-        } else toast.error(updatedTicketRes.message)
+    const handleCloseTicket = async () => {
+        try {
+            const res = await updateTicket({
+                ticket: { id: data?.getTicket.ticket?._id!, status: TicketStatus.Closed },
+            })
+
+            //server error
+            if (res.error) toast.error(res.error.message)
+            //custom error
+            if (res.data?.updateTicket.errors)
+                toast.error(toErrorMap(res.data?.updateTicket.errors).toString())
+            //naviagte on success
+            if (res.data?.updateTicket.ticket) {
+                toast.success('Ticket closed.')
+            }
+        } catch (error: any) {
+            console.log(error)
+            toast.error(error as string)
+        }
+        toggleConfirmPopup()
     }
 
     return (
@@ -135,11 +153,11 @@ const Ticket = (props: Props) => {
                     ) : null}
                     {ticket?.notes?.length! > 0 ? (
                         <List>
-                            {ticket?.notes!.map((v) => {
+                            {ticket?.notes!.map((note) => {
                                 return (
                                     <NoteItem
-                                        key={}
-                                        note={}
+                                        key={note._id}
+                                        note={note}
                                     ></NoteItem>
                                 )
                             })}
@@ -156,7 +174,7 @@ const Ticket = (props: Props) => {
                     )}
                 </Stack>
             </Card>
-            {ticket.status !== TicketStatus.Closed ? (
+            {ticket?.status !== TicketStatus.Closed ? (
                 <Button
                     variant='contained'
                     color='error'
@@ -187,11 +205,12 @@ const Ticket = (props: Props) => {
                 rejectButtonText={'Cancel'}
                 acceptButtonText={'Confirm'}
                 isOpen={showConfirmPopup}
-                onAccept={handleConfirmSave}
+                onAccept={handleCloseTicket}
                 onReject={toggleConfirmPopup}
                 onClose={toggleConfirmPopup}
             />
         </BasePageLayout>
     )
 }
+
 export default Ticket

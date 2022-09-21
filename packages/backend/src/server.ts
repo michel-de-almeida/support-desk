@@ -51,7 +51,6 @@ declare global {
     const server = new ApolloServer({
         schema: await buildSchema({
             resolvers: [UserResolver, TicketResolver],
-            emitSchemaFile: true,
             authChecker: customAuthChecker,
         }),
         context: ({ req, res }): IAppContext => ({ req, res }),

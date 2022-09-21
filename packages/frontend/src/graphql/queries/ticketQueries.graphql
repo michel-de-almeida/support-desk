@@ -13,6 +13,7 @@ query GetUserTickets {
       description
       status
       notes {
+        _id
         noteText
         createdBy {
           _id
@@ -21,6 +22,8 @@ query GetUserTickets {
           roles
           token
         }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -47,6 +50,7 @@ query GetTickets {
       description
       status
       notes {
+        _id
         noteText
         createdBy {
           _id
@@ -55,6 +59,8 @@ query GetTickets {
           roles
           token
         }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt
@@ -81,6 +87,7 @@ query GetTicket($ticketId: String!) {
       description
       status
       notes {
+        _id
         noteText
         createdBy {
           _id
@@ -89,6 +96,8 @@ query GetTicket($ticketId: String!) {
           roles
           token
         }
+        createdAt
+        updatedAt
       }
       createdAt
       updatedAt

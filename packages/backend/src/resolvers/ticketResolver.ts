@@ -87,7 +87,7 @@ export class TicketResolver {
         @Ctx() { req }: IAppContext
     ): Promise<TicketResponse> {
         const user = await UserModel.findById(req.session.userId)
-        const note: Note = { noteText: noteText, createdBy: user! }
+        const note: Note = { noteText: noteText, createdBy: user!, createdAt: new Date() }
         const ticket = await TicketModel.findByIdAndUpdate(
             id,
             { $push: { notes: note } },

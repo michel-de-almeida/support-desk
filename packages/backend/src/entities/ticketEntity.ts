@@ -20,6 +20,9 @@ registerEnumType(TicketStatus, { name: 'TicketStatus', description: 'The status 
 
 @ObjectType()
 export class Note {
+    @Field(() => ID)
+    readonly _id?: string
+
     @Field()
     @prop({ required: [true, 'Please enter a note'] })
     noteText!: string
@@ -27,6 +30,12 @@ export class Note {
     @Field()
     @prop({ required: true })
     public createdBy!: User
+
+    @Field({ nullable: true })
+    public createdAt?: Date
+
+    @Field({ nullable: true })
+    public updatedAt?: Date
 }
 
 @ObjectType()
