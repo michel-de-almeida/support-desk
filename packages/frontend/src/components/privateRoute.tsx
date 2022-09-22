@@ -5,9 +5,9 @@ interface Props {
     children: JSX.Element
 }
 const PrivateRoute = ({ children }: Props) => {
-    const { user } = useAppSelector((state) => state.auth)
+    const { userId } = useAppSelector((state) => state.auth)
 
-    if (user?._id) return children
+    if (userId) return children
 
     return <Navigate to='/login' />
 }

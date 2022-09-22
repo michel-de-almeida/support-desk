@@ -13,36 +13,23 @@ import {
 } from '@mui/material'
 import { Menu as MenuIcon } from '@mui/icons-material'
 import ThemeSwitch from './themeSwitch'
-import { ChangeEvent, useEffect } from 'react'
-import { setUseDark } from '../features/theme/themeSlice'
-import { useLogoutMutation, useMeQuery, User } from '../generated/graphql'
-import { setUser } from '../features/auth/authSlice'
+import { ChangeEvent } from 'react'
+import { setUseDark } from '../redux/theme/themeSlice'
+import { useLogoutMutation } from '../generated/graphql'
+import { setUserId } from '../redux/auth/authSlice'
 
 interface Props {}
 const Header = (props: Props) => {
     const navigate = useNavigate()
     const dispatch = useAppDispatch()
     const themeState = useAppSelector((state) => state.theme)
-    const { user } = useAppSelector((state) => state.auth)
+    const { userId } = useAppSelector((state) => state.auth)
     const theme = useTheme()
-    const [{ data }, getMe] = useMeQuery({ pause: true })
     const [, doLogout] = useLogoutMutation()
-
-    const emptyUser: User = {
-        _id: '',
-        email: '',
-        roles: [],
-        username: '',
-    }
-
-    useEffect(() => {
-        getMe()
-        dispatch(setUser(data?.me!))
-    }, [dispatch, getMe, data?.me])
 
     const handleLogout = async () => {
         await doLogout({})
-        dispatch(setUser(emptyUser))
+        dispatch(setUserId(''))
         navigate('/login')
     }
 
@@ -83,7 +70,7 @@ const Header = (props: Props) => {
                         direction={'row'}
                         spacing={1.5}
                     >
-                        {user?._id ? (
+                        {userId ? (
                             <Button
                                 onClick={handleLogout}
                                 variant='outlined'

@@ -4,18 +4,24 @@ import { Avatar, Box, Container, Grid, Link, TextField, Typography } from '@mui/
 import { FormEvent, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
 import { useRegisterMutation } from '../generated/graphql'
+import { setUserId } from '../redux/auth/authSlice'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
 
 const Register = () => {
+    //inputs
     const username = useRef<HTMLInputElement>(null)
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
     const repeatPassword = useRef<HTMLInputElement>(null)
+    //graphQL hooks
     const [{ fetching }, register] = useRegisterMutation()
-
+    //redux
+    const dispatch = useAppDispatch()
+    //router
     const navigate = useNavigate()
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -44,6 +50,7 @@ const Register = () => {
                 toast.error(toErrorMap(res.data?.register.errors).toString())
             //naviagte on success
             if (res.data?.register.user) {
+                dispatch(setUserId(res.data?.register.user._id))
                 toast.success('Account created')
                 navigate(RouteURLs.Home)
             }

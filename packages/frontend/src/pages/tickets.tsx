@@ -6,7 +6,7 @@ import StatusChip from '../components/statusChip'
 import { useGetUserTicketsQuery, Ticket, TicketStatus } from '../generated/graphql'
 import BasePageLayout from '../layouts/basePageLayout'
 import { RouteURLs } from '../static/enums'
-import { toErrorMap } from '../utils/utils'
+import { camelCaseToNormal, toErrorMap } from '../utils/utils'
 
 const Tickets = () => {
     const [{ data, error, fetching }] = useGetUserTicketsQuery()
@@ -42,7 +42,7 @@ const Tickets = () => {
                             naviagte(`${RouteURLs.Ticket}/${params.id}`)
                         }}
                     >
-                        {params.value}
+                        {camelCaseToNormal(params.value)}
                     </Link>
                 </strong>
             ),

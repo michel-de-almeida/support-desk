@@ -1,22 +1,12 @@
 import { Login as LoginIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
-import {
-    Avatar,
-    Box,
-    Checkbox,
-    Container,
-    FormControlLabel,
-    Grid,
-    Link,
-    TextField,
-    Typography,
-} from '@mui/material'
+import { Avatar, Box, Container, Grid, Link, TextField, Typography } from '@mui/material'
 import { FormEvent, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { setUser } from '../features/auth/authSlice'
+import { setUserId } from '../redux/auth/authSlice'
 import { useLoginMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
@@ -25,7 +15,6 @@ const Login = () => {
     //inputs
     const email = useRef<HTMLInputElement>(null)
     const password = useRef<HTMLInputElement>(null)
-    const isPersist = useRef<HTMLInputElement>(null)
 
     //graphQl hooks
     const [{ fetching }, login] = useLoginMutation()
@@ -49,7 +38,7 @@ const Login = () => {
             if (res.data?.login.errors) toast.error(toErrorMap(res.data?.login.errors).toString())
             //naviagte on success
             if (res.data?.login.user) {
-                dispatch(setUser(res.data.login.user))
+                dispatch(setUserId(res.data.login.user._id))
                 navigate(RouteURLs.Home)
             }
         } catch (error: any) {
@@ -107,16 +96,6 @@ const Login = () => {
                             id='password'
                             autoComplete='current-password'
                             inputRef={password}
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    value='remember'
-                                    color='primary'
-                                    inputRef={isPersist}
-                                />
-                            }
-                            label='Remember me'
                         />
                         <LoadingButton
                             type='submit'

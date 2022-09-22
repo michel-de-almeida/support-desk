@@ -12,6 +12,7 @@ import {
     Role,
     TicketStatus,
     useGetTicketQuery,
+    useMeQuery,
     useSetTicketNoteMutation,
     useUpdateTicketMutation,
 } from '../generated/graphql'
@@ -20,7 +21,7 @@ import { toErrorMap } from '../utils/utils'
 
 interface Props {}
 const Ticket = (props: Props) => {
-    //route
+    //route parameters
     const { ticketId } = useParams()
 
     //graphQL hooks
@@ -29,6 +30,7 @@ const Ticket = (props: Props) => {
     const [{ data: ticketData, error, fetching: isTicketFetching }] = useGetTicketQuery({
         variables: { ticketId: ticketId! },
     })
+    const [{ data: meData, fetching: isMeFetching }] = useMeQuery()
 
     //inputs
     const note = useRef<HTMLInputElement>(null)
@@ -37,16 +39,17 @@ const Ticket = (props: Props) => {
     const navigate = useNavigate()
 
     //redux
-    const { user } = useAppSelector((state) => state.auth)
+    const { userId } = useAppSelector((state) => state.auth)
 
-    if (!isTicketFetching) {
+    if (!isTicketFetching && !isMeFetching) {
         if (error) toast.error(error.message)
         if (ticketData?.getTicket.errors)
             toast.error(toErrorMap(ticketData?.getTicket.errors).toString())
-        // console.log('userdoc', ticketData?.getTicket.ticket?.userDoc._id)
-        // console.log('userId', user?._id)
 
-        if (ticketData?.getTicket.ticket?.userDoc._id !== user?._id) {
+        if (
+            ticketData?.getTicket.ticket?.userDoc._id !== userId &&
+            !meData?.me.roles.includes(Role.Admin)
+        ) {
             toast.error('Invalid permissions to view this screen')
             navigate(-1)
         }

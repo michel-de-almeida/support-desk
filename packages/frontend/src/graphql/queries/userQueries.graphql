@@ -7,3 +7,9 @@ query Me {
     token
   }
 }
+
+query userId {
+  me {
+    _id
+  }
+}

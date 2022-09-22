@@ -24,7 +24,14 @@ const NewTicket = () => {
     const [product, setProduct] = useState('')
     const description = useRef<HTMLInputElement>(null)
     const [{ fetching }, setTicket] = useSetTicketMutation()
-    const ticketTypeArray = Object.values(TicketType)
+
+    //convert the enum to an object<key, value> array
+    const ticketTypeArray = Object.keys(TicketType).map((key) => {
+        return {
+            key,
+            value: TicketType[key as keyof typeof TicketType],
+        }
+    })
 
     const navigate = useNavigate()
 
@@ -108,10 +115,10 @@ const NewTicket = () => {
                             {ticketTypeArray.map((v) => {
                                 return (
                                     <MenuItem
-                                        key={v}
-                                        value={v}
+                                        key={v.key}
+                                        value={v.key}
                                     >
-                                        {v}
+                                        {v.value}
                                     </MenuItem>
                                 )
                             })}

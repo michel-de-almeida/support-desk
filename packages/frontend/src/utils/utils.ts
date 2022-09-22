@@ -12,3 +12,16 @@ export const toErrorMap = (errors: FieldError[]) => {
 
     return errorMap
 }
+
+export const camelCaseToNormal = (string: string | undefined) => {
+    if (string) {
+        return (
+            string
+                .replace(/([A-Z])/g, ' $1')
+                // uppercase the first character
+                .replace(/^./, function (str) {
+                    return str.toUpperCase()
+                })
+        )
+    } else return ''
+}
