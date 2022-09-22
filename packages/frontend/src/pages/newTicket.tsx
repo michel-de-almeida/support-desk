@@ -3,15 +3,15 @@ import {
     Box,
     Container,
     FormControl,
+    FormHelperText,
     InputLabel,
     MenuItem,
     Select,
-    SelectChangeEvent,
     Stack,
     TextField,
     Typography,
 } from '@mui/material'
-import { FormEvent, useRef, useState } from 'react'
+import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { TicketType } from 'support-desk-shared'
@@ -19,10 +19,9 @@ import AnimatedDiv from '../components/animatedDiv'
 import { useSetTicketMutation } from '../generated/graphql'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
+import * as yup from 'yup'
 
 const NewTicket = () => {
-    const [product, setProduct] = useState('')
-    const description = useRef<HTMLInputElement>(null)
     const [{ fetching }, setTicket] = useSetTicketMutation()
 
     //convert the enum to an object<key, value> array
@@ -35,33 +34,38 @@ const NewTicket = () => {
 
     const navigate = useNavigate()
 
-    const handleSelectChange = (event: SelectChangeEvent) => {
-        setProduct(event.target.value)
-    }
+    const validationSchema = yup.object({
+        product: yup.string().required('Product is required'),
+        description: yup.string().required('Description is required'),
+    })
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        try {
-            const res = await setTicket({
-                ticket: {
-                    product: product as TicketType,
-                    description: description.current?.value!,
-                },
-            })
-            if (res.error) toast.error(res.error.message)
-            //custom error
-            if (res.data?.setTicket.errors)
-                toast.error(toErrorMap(res.data?.setTicket.errors).toString())
-            //naviagte on success
-            if (res.data?.setTicket.ticket) {
-                toast.success('Ticket created')
-                navigate(RouteURLs.Home)
+    const formik = useFormik({
+        initialValues: {
+            product: '',
+            description: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values, { setErrors }) => {
+            try {
+                const res = await setTicket({
+                    ticket: {
+                        product: values.product as TicketType,
+                        description: values.description,
+                    },
+                })
+                if (res.error) toast.error(res.error.message)
+                //custom error
+                if (res.data?.setTicket.errors) setErrors(toErrorMap(res.data?.setTicket.errors))
+                //naviagte on success
+                if (res.data?.setTicket.ticket) {
+                    toast.success('Ticket created')
+                    navigate(RouteURLs.Home)
+                }
+            } catch (error: any) {
+                toast.error(error as string)
             }
-        } catch (error: any) {
-            toast.error(error as string)
-        }
-    }
+        },
+    })
 
     return (
         <AnimatedDiv>
@@ -71,7 +75,7 @@ const NewTicket = () => {
             >
                 <Box
                     component='form'
-                    onSubmit={handleSubmit}
+                    onSubmit={formik.handleSubmit}
                     mt={8}
                 >
                     <Typography
@@ -101,16 +105,19 @@ const NewTicket = () => {
                             Please fill out the form below
                         </Stack>
                     </Typography>
-                    <FormControl fullWidth>
+                    <FormControl
+                        fullWidth
+                        error={formik.touched.product && Boolean(formik.errors.product)}
+                    >
                         <InputLabel id='select-product-label'>Product</InputLabel>
                         <Select
-                            required
                             fullWidth
                             id='product'
+                            name='product'
                             labelId='select-product-label'
                             label='Product'
-                            value={product}
-                            onChange={handleSelectChange}
+                            value={formik.values.product}
+                            onChange={formik.handleChange}
                         >
                             {ticketTypeArray.map((v) => {
                                 return (
@@ -123,17 +130,21 @@ const NewTicket = () => {
                                 )
                             })}
                         </Select>
+                        <FormHelperText>
+                            {formik.touched.product && formik.errors.product}
+                        </FormHelperText>
                     </FormControl>
                     <TextField
                         margin='normal'
                         multiline
                         minRows={3}
-                        required
                         fullWidth
+                        id='description'
                         name='description'
                         label='Please enter a description of the issue'
-                        id='description'
-                        inputRef={description}
+                        onChange={formik.handleChange}
+                        error={formik.touched.description && Boolean(formik.errors.description)}
+                        helperText={formik.touched.description && formik.errors.description}
                     />
                     <LoadingButton
                         type='submit'
