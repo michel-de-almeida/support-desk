@@ -1,50 +1,57 @@
 import { Login as LoginIcon } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import { Avatar, Box, Container, Grid, Link, TextField, Typography } from '@mui/material'
-import { FormEvent, useRef } from 'react'
+import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import * as yup from 'yup'
 import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
-import { setUserId } from '../redux/auth/authSlice'
 import { useLoginMutation } from '../generated/graphql'
+import { setUserId } from '../redux/auth/authSlice'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
 
 const Login = () => {
-    //inputs
-    const email = useRef<HTMLInputElement>(null)
-    const password = useRef<HTMLInputElement>(null)
-
     //graphQl hooks
     const [{ fetching }, login] = useLoginMutation()
-
     //router
     const navigate = useNavigate()
-
     //redux
     const dispatch = useAppDispatch()
+    //yup schema (used with formik)
+    const validationSchema = yup.object({
+        email: yup.string().email('Enter a valid email').required('Email is required'),
+        password: yup.string().required('Password is required'),
+    })
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        try {
-            const res = await login({
-                options: { email: email.current?.value!, password: password.current?.value! },
-            })
-            //server error
-            if (res.error) toast.error(res.error.message)
-            //custom error
-            if (res.data?.login.errors) toast.error(toErrorMap(res.data?.login.errors).toString())
-            //naviagte on success
-            if (res.data?.login.user) {
-                dispatch(setUserId(res.data.login.user._id))
-                navigate(RouteURLs.Home)
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (values, { setErrors }) => {
+            try {
+                const res = await login({
+                    options: values,
+                })
+                //server error
+                if (res.error) toast.error(res.error.message)
+                //custom error
+                if (res.data?.login.errors) {
+                    setErrors(toErrorMap(res.data?.login.errors))
+                }
+                //naviagte on success
+                if (res.data?.login.user) {
+                    dispatch(setUserId(res.data.login.user._id))
+                    navigate(RouteURLs.Home)
+                }
+            } catch (error: any) {
+                toast.error(error as string)
             }
-        } catch (error: any) {
-            toast.error(error as string)
-        }
-    }
+        },
+    })
 
     return (
         <AnimatedDiv>
@@ -71,12 +78,11 @@ const Login = () => {
                     </Typography>
                     <Box
                         component='form'
-                        onSubmit={handleSubmit}
+                        onSubmit={formik.handleSubmit}
                         sx={{ mt: 3 }}
                     >
                         <TextField
                             margin='normal'
-                            required
                             fullWidth
                             id='email'
                             label='Email Address'
@@ -84,18 +90,21 @@ const Login = () => {
                             name='email'
                             autoComplete='email'
                             autoFocus
-                            inputRef={email}
+                            onChange={formik.handleChange}
+                            error={formik.touched.email && Boolean(formik.errors.email)}
+                            helperText={formik.touched.email && formik.errors.email}
                         />
                         <TextField
                             margin='normal'
-                            required
                             fullWidth
                             name='password'
                             label='Password'
                             type='password'
                             id='password'
                             autoComplete='current-password'
-                            inputRef={password}
+                            onChange={formik.handleChange}
+                            error={formik.touched.password && Boolean(formik.errors.password)}
+                            helperText={formik.touched.password && formik.errors.password}
                         />
                         <LoadingButton
                             type='submit'

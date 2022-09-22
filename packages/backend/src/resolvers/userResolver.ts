@@ -55,8 +55,7 @@ export class UserResolver {
                 errors: [
                     {
                         field: 'email',
-                        message:
-                            'Account with this email does not exist. Please create and account',
+                        message: 'Account with this email does not exist. Please create an account',
                     },
                 ],
             }
