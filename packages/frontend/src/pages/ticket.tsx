@@ -39,7 +39,7 @@ const Ticket = (props: Props) => {
     const navigate = useNavigate()
 
     //redux
-    const { userId } = useAppSelector((state) => state.auth)
+    const { user } = useAppSelector((state) => state.auth)
 
     if (!isTicketFetching && !isMeFetching) {
         if (error) toast.error(error.message)
@@ -47,7 +47,7 @@ const Ticket = (props: Props) => {
             toast.error(toErrorMap(ticketData?.getTicket.errors).toString())
 
         if (
-            ticketData?.getTicket.ticket?.userDoc._id !== userId &&
+            ticketData?.getTicket.ticket?.userDoc._id !== user._id &&
             !meData?.me.roles.includes(Role.Admin)
         ) {
             toast.error('Invalid permissions to view this screen')

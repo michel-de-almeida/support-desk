@@ -1,23 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { LocalStorageKeys } from '../../static/enums'
+import { User } from '../../generated/graphql'
 
-const ls = localStorage.getItem(LocalStorageKeys.User)
-
-const emptyState = {
-    userId: '',
+const emptyUser: User = {
+    _id: '',
+    email: '',
+    roles: [],
+    username: '',
 }
 
 const authSlice = createSlice({
     name: 'auth',
-    initialState: ls ? JSON.parse(ls) : emptyState,
+    initialState: { user: emptyUser },
     reducers: {
-        setUserId: (state, action: PayloadAction<string>) => {
-            state.userId = action.payload
-            localStorage.setItem(LocalStorageKeys.User, JSON.stringify({ userId: action.payload }))
+        setUser: (state, action: PayloadAction<User>) => {
+            state.user = action.payload
         },
     },
 })
 
-export const { setUserId } = authSlice.actions
+export const { setUser } = authSlice.actions
 
 export default authSlice.reducer

@@ -2,79 +2,63 @@ import { Container } from '@mui/material'
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
-import { useAppSelector } from './app/hooks'
+import { useAppDispatch, useAppSelector } from './app/hooks'
 import 'react-toastify/dist/ReactToastify.css'
 import Header from './components/header'
 import { darkTheme, lightTheme } from './theme'
 import AnimatedRoutes from './app/animatedRoutes'
-import { createClient, Provider as URQLProvider, gql, fetchExchange, dedupExchange } from 'urql'
-import { LocalStorageKeys } from './static/enums'
-import { cacheExchange, query } from '@urql/exchange-graphcache'
-import { LoginMutation, MeDocument, MeQuery, RegisterMutation } from './generated/graphql'
+import { createClient, Provider as URQLProvider, OperationResult } from 'urql'
+import { MeQuery, MeDocument } from './generated/graphql'
+import { setUser } from './redux/auth/authSlice'
 
 const client = createClient({
     url: 'http://localhost:5000/graphql',
     fetchOptions: {
         credentials: 'include',
     },
-    exchanges: [
-        dedupExchange,
-        cacheExchange({
-            updates: {
-                Mutation: {
-                    login: (result: LoginMutation, _args, cache, _info) => {
-                        cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
-                            if (result.login.errors) {
-                                return data
-                            } else {
-                                return {
-                                    me: result.login.user!,
-                                }
-                            }
-                        })
-                    },
-                    register: (result: RegisterMutation, _args, cache, _info) => {
-                        cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
-                            if (result.register.errors) {
-                                return data
-                            } else {
-                                return {
-                                    me: result.register.user!,
-                                }
-                            }
-                        })
-                    },
-                },
-            },
-        }),
-        fetchExchange,
-    ],
 })
+
+// updates: {
+//     Mutation: {
+//         login: (result: LoginMutation, _args, cache, _info) => {
+//             cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
+//                 if (result.login.errors) {
+//                     return data
+//                 } else {
+//                     return {
+//                         me: result.login.user!,
+//                     }
+//                 }
+//             })
+//         },
+//         register: (result: RegisterMutation, _args, cache, _info) => {
+//             cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
+//                 if (result.register.errors) {
+//                     return data
+//                 } else {
+//                     return {
+//                         me: result.register.user!,
+//                     }
+//                 }
+//             })
+//         },
+//     },
+// },
 
 function App() {
     const themeState = useAppSelector((state) => state.theme)
-
-    const meQuery = gql`
-        query {
-            me {
-                _id
-            }
-        }
-    `
+    const dispatch = useAppDispatch()
 
     let currentTheme = themeState.useDark ? darkTheme : lightTheme
 
-    //rewrites the userId if it is changed
+    //run the 'me' query
     client
-        .query(meQuery, {})
+        .query(MeDocument, {})
         .toPromise()
-        .then((result) => {
-            const ls = localStorage.getItem(LocalStorageKeys.User)
-            if (ls && JSON.parse(ls).userId !== result?.data?.me?._id!) {
-                localStorage.setItem(
-                    LocalStorageKeys.User,
-                    JSON.stringify({ userId: result?.data?.me?._id! })
-                )
+        .then((result: OperationResult<MeQuery>) => {
+            //populate the AuthState if it has results
+            if (result.data?.me) {
+                dispatch(setUser(result.data.me))
             }
         })
 

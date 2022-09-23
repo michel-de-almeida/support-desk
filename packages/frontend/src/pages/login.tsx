@@ -8,7 +8,7 @@ import * as yup from 'yup'
 import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
 import { useLoginMutation } from '../generated/graphql'
-import { setUserId } from '../redux/auth/authSlice'
+import { setUser } from '../redux/auth/authSlice'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
 
@@ -33,9 +33,12 @@ const Login = () => {
         validationSchema: validationSchema,
         onSubmit: async (values, { setErrors }) => {
             try {
-                const res = await login({
-                    options: values,
-                })
+                const res = await login(
+                    {
+                        options: values,
+                    },
+                    { additionalTypenames: ['User'] }
+                )
                 //server error
                 if (res.error) toast.error(res.error.message)
                 //custom error
@@ -44,7 +47,7 @@ const Login = () => {
                 }
                 //naviagte on success
                 if (res.data?.login.user) {
-                    dispatch(setUserId(res.data.login.user._id))
+                    dispatch(setUser(res.data.login.user))
                     navigate(RouteURLs.Home)
                 }
             } catch (error: any) {

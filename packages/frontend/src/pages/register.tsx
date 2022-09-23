@@ -8,7 +8,7 @@ import * as yup from 'yup'
 import { useAppDispatch } from '../app/hooks'
 import AnimatedDiv from '../components/animatedDiv'
 import { useRegisterMutation } from '../generated/graphql'
-import { setUserId } from '../redux/auth/authSlice'
+import { setUser } from '../redux/auth/authSlice'
 import { RouteURLs } from '../static/enums'
 import { toErrorMap } from '../utils/utils'
 
@@ -60,7 +60,7 @@ const Register = () => {
                 if (res.data?.register.errors) setErrors(toErrorMap(res.data?.register.errors))
                 //naviagte on success
                 if (res.data?.register.user) {
-                    dispatch(setUserId(res.data?.register.user._id))
+                    dispatch(setUser(res.data?.register.user))
                     toast.success('Account created')
                     navigate(RouteURLs.Home)
                 }
