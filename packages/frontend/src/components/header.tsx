@@ -15,21 +15,26 @@ import { Menu as MenuIcon } from '@mui/icons-material'
 import ThemeSwitch from './themeSwitch'
 import { ChangeEvent } from 'react'
 import { setUseDark } from '../redux/theme/themeSlice'
-import { useLogoutMutation } from '../generated/graphql'
+import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { setUserId } from '../redux/auth/authSlice'
 
 interface Props {}
 const Header = (props: Props) => {
+    //route
     const navigate = useNavigate()
+    //redux
     const dispatch = useAppDispatch()
     const themeState = useAppSelector((state) => state.theme)
     const { userId } = useAppSelector((state) => state.auth)
+    //material theme
     const theme = useTheme()
+    //graphQL hooks
     const [, doLogout] = useLogoutMutation()
+    const [{ data }] = useMeQuery()
 
     const handleLogout = async () => {
         await doLogout({})
-        dispatch(setUserId(''))
+        //dispatch(setUserId(''))
         navigate('/login')
     }
 
@@ -70,7 +75,7 @@ const Header = (props: Props) => {
                         direction={'row'}
                         spacing={1.5}
                     >
-                        {userId ? (
+                        {data?.me._id ? (
                             <Button
                                 onClick={handleLogout}
                                 variant='outlined'

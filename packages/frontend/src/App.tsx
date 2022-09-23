@@ -7,14 +7,48 @@ import 'react-toastify/dist/ReactToastify.css'
 import Header from './components/header'
 import { darkTheme, lightTheme } from './theme'
 import AnimatedRoutes from './app/animatedRoutes'
-import { createClient, Provider as URQLProvider, gql } from 'urql'
+import { createClient, Provider as URQLProvider, gql, fetchExchange, dedupExchange } from 'urql'
 import { LocalStorageKeys } from './static/enums'
+import { cacheExchange, query } from '@urql/exchange-graphcache'
+import { LoginMutation, MeDocument, MeQuery, RegisterMutation } from './generated/graphql'
 
 const client = createClient({
     url: 'http://localhost:5000/graphql',
     fetchOptions: {
         credentials: 'include',
     },
+    exchanges: [
+        dedupExchange,
+        cacheExchange({
+            updates: {
+                Mutation: {
+                    login: (result: LoginMutation, _args, cache, _info) => {
+                        cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
+                            if (result.login.errors) {
+                                return data
+                            } else {
+                                return {
+                                    me: result.login.user!,
+                                }
+                            }
+                        })
+                    },
+                    register: (result: RegisterMutation, _args, cache, _info) => {
+                        cache.updateQuery({ query: MeDocument }, (data: MeQuery | null) => {
+                            if (result.register.errors) {
+                                return data
+                            } else {
+                                return {
+                                    me: result.register.user!,
+                                }
+                            }
+                        })
+                    },
+                },
+            },
+        }),
+        fetchExchange,
+    ],
 })
 
 function App() {
